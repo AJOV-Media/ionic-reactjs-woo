@@ -1,18 +1,29 @@
 import React, { Component } from "react";
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-
-import ProductListing from "../../interfaces/ProductListing.interface";
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonThumbnail, IonLabel } from '@ionic/react';
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
+import ProductItems from "../../components/ProductItems/ProductItems";
 
-class Products extends Component <ProductListing> {
+interface Props {
+
+}
+
+interface State {
+  error: boolean,
+  productItems: []
+}
+
+
+
+class Products extends Component <Props, State> {
 
   WooCommerce: any;
 
-  constructor(props: ProductListing){
+  constructor(props: Props){
     super(props);
     this.state = {
-        error: false
+        error: false,
+        productItems: []
     }
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -31,11 +42,12 @@ class Products extends Component <ProductListing> {
     .then( (response) => {
 
         console.log(response.data);
+    
 
     })
     .catch((error) => {
         console.log("Error Data:", error.response.data);
-       
+        this.setState({ error: true});
 
     })
     .finally(() => {
@@ -46,6 +58,10 @@ class Products extends Component <ProductListing> {
 
     render () {
 
+      const { error, 
+              productItems
+       } = this.state; //Deconstruct
+
         return (
             <IonPage>
               <IonHeader>
@@ -54,6 +70,15 @@ class Products extends Component <ProductListing> {
                 </IonToolbar>
               </IonHeader>
               <IonContent>
+
+              {productItems.map(pproduct => {
+                  return (
+                          
+                      <ProductItems  />
+
+                  )
+               })}
+                
                 <IonHeader collapse="condense">
                   <IonToolbar>
                     <IonTitle size="large">Product</IonTitle>
