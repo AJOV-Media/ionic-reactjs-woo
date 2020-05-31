@@ -42,9 +42,7 @@ class Products extends Component <Props, State> {
     .then( (response) => {
 
      Object.keys(response.data).forEach((key) => {
-        //return response.data[key];
-       // console.log(key, response.data[key]);
-       // productKeys.push(response.data[key]);
+      
         this.setState({
           productItems: [...this.state.productItems,  response.data[key]]
         });
@@ -84,7 +82,7 @@ class Products extends Component <Props, State> {
                                <p> No product</p>
                             </div>
        }  else if (productItems) {
-        
+          productContent =  this.displayProducts(productItems) 
        }
 
         return (
@@ -96,7 +94,7 @@ class Products extends Component <Props, State> {
               </IonHeader>
               <IonContent>
 
-              { this.displayProducts(productItems) } 
+              { productContent } 
                 
                 <IonHeader collapse="condense">
                   <IonToolbar>
