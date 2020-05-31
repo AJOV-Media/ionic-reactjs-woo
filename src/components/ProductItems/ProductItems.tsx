@@ -4,12 +4,14 @@ import { IonList, IonThumbnail, IonLabel } from "@ionic/react";
 
 
 class ProductItems extends Component <ProductListing> {
+    
     render () {
+        const { name } = this.props;
         return (
            <IonList>
                <IonThumbnail item-left></IonThumbnail>
                <IonLabel>
-                 Test name
+                   {name}
               </IonLabel>
           </IonList>
         )

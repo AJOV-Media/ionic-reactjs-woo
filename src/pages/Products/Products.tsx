@@ -10,7 +10,7 @@ interface Props {
 
 interface State {
   error: boolean,
-  productItems: []
+  productItems: any
 }
 
 
@@ -41,12 +41,19 @@ class Products extends Component <Props, State> {
     this.WooCommerce.get('products', {'page': 1 })
     .then( (response) => {
 
-        console.log(response.data);
-    
+     Object.keys(response.data).forEach((key) => {
+        //return response.data[key];
+       // console.log(key, response.data[key]);
+       // productKeys.push(response.data[key]);
+        this.setState({
+          productItems: [...this.state.productItems,  response.data[key]]
+        });
+     }); 
+
 
     })
     .catch((error) => {
-        console.log("Error Data:", error.response.data);
+        console.log("Error Data:", error);
         this.setState({ error: true});
 
     })
@@ -56,11 +63,29 @@ class Products extends Component <Props, State> {
     });
   }
 
+   displayProducts = productLists => (
+        productLists.length > 0 && productLists.map(product => (
+          <ProductItems 
+             key={product.id} 
+             name={product.name} />
+        ))
+    )
+
     render () {
 
       const { error, 
               productItems
        } = this.state; //Deconstruct
+
+       let productContent;
+
+       if(error) {
+          productContent =  <div className="container">
+                               <p> No product</p>
+                            </div>
+       }  else if (productItems) {
+        
+       }
 
         return (
             <IonPage>
@@ -71,13 +96,7 @@ class Products extends Component <Props, State> {
               </IonHeader>
               <IonContent>
 
-              {productItems.map(pproduct => {
-                  return (
-                          
-                      <ProductItems  />
-
-                  )
-               })}
+              { this.displayProducts(productItems) } 
                 
                 <IonHeader collapse="condense">
                   <IonToolbar>
