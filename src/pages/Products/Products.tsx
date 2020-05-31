@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonThumbnail, IonLabel } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList } from '@ionic/react';
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 import ProductItems from "../../components/ProductItems/ProductItems";
@@ -65,7 +65,9 @@ class Products extends Component <Props, State> {
         productLists.length > 0 && productLists.map(product => (
           <ProductItems 
              key={product.id} 
-             name={product.name} />
+             name={product.name}
+             shortDescription={product.short_description}
+             price_html={product.price_html} />
         ))
     )
 
@@ -94,13 +96,18 @@ class Products extends Component <Props, State> {
               </IonHeader>
               <IonContent>
 
-              { productContent } 
-                
+                            
                 <IonHeader collapse="condense">
                   <IonToolbar>
                     <IonTitle size="large">Product</IonTitle>
                   </IonToolbar>
                 </IonHeader>
+
+                <IonList>
+                { productContent } 
+                </IonList>
+
+                
                 
               </IonContent>
             </IonPage>
