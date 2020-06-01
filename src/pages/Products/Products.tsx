@@ -67,7 +67,8 @@ class Products extends Component <Props, State> {
              key={product.id} 
              name={product.name}
              shortDescription={product.short_description}
-             price_html={product.price_html} />
+             price_html={product.price_html}
+             mainImage={product.images[0]} />
         ))
     )
 
