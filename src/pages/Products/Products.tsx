@@ -3,6 +3,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList } from '@
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 import ProductItems from "../../components/ProductItems/ProductItems";
+import { Spinner } from "../../components/UI/Spinner/Spinner";
 
 interface Props {
 
@@ -10,6 +11,7 @@ interface Props {
 
 interface State {
   error: boolean,
+  loading: boolean,
   productItems: any
 }
 
@@ -23,6 +25,7 @@ class Products extends Component <Props, State> {
     super(props);
     this.state = {
         error: false,
+        loading: true,
         productItems: []
     }
 
@@ -48,16 +51,13 @@ class Products extends Component <Props, State> {
         });
      }); 
 
-
     })
     .catch((error) => {
         console.log("Error Data:", error);
         this.setState({ error: true});
-
     })
     .finally(() => {
-       
-        
+      this.setState({ loading: false });
     });
   }
 
@@ -75,6 +75,7 @@ class Products extends Component <Props, State> {
     render () {
 
       const { error, 
+              loading,
               productItems
        } = this.state; //Deconstruct
 
@@ -88,6 +89,8 @@ class Products extends Component <Props, State> {
           productContent =  this.displayProducts(productItems) 
        }
 
+       let content = loading ? <Spinner message = "Loading..." />  :  <IonList>{ productContent } </IonList>
+
         return (
             <IonPage>
               <IonHeader>
@@ -96,20 +99,7 @@ class Products extends Component <Props, State> {
                 </IonToolbar>
               </IonHeader>
               <IonContent>
-
-                            
-                <IonHeader collapse="condense">
-                  <IonToolbar>
-                    <IonTitle size="large">Product</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
-
-                <IonList>
-                { productContent } 
-                </IonList>
-
-                
-                
+                { content }
               </IonContent>
             </IonPage>
           );
