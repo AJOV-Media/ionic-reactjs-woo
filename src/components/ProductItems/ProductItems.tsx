@@ -37,9 +37,9 @@ class ProductItems extends Component <ProductListing> {
     }
     
     render () {
-        const { name, shortDescription, price_html, mainImage } = this.props;
+        const { name, shortDescription, price_html, mainImage, clicked } = this.props;
         return (
-             <IonItem >
+             <IonItem onClick={clicked} >
                    <IonThumbnail item-left>
                        <img src={this.mapImage(mainImage)} alt={name} />
                    </IonThumbnail>

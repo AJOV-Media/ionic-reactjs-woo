@@ -4,4 +4,5 @@ export default interface ProductListing {
     shortDescription?: string; 
     price_html?: string;
     mainImage?: string;
+    clicked: any;
 }

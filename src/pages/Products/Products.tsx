@@ -4,6 +4,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList } from '@
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 import ProductItems from "../../components/ProductItems/ProductItems";
 import { Spinner } from "../../components/UI/Spinner/Spinner";
+import Modal from "../../components/UI/Modal/Modal";
 
 interface Props {
 
@@ -12,6 +13,7 @@ interface Props {
 interface State {
   error: boolean,
   loading: boolean,
+  isDetailView: boolean,
   productItems: any
 }
 
@@ -26,6 +28,7 @@ class Products extends Component <Props, State> {
     this.state = {
         error: false,
         loading: true,
+        isDetailView: false,
         productItems: []
     }
 
@@ -61,6 +64,14 @@ class Products extends Component <Props, State> {
     });
   }
 
+  detailCancelHandler = () => {
+    this.setState({isDetailView: false});
+  }
+
+  detailHandler = () => {
+    this.setState({isDetailView: true});
+  }
+
    displayProducts = productLists => (
         productLists.length > 0 && productLists.map(product => (
           <ProductItems 
@@ -68,7 +79,9 @@ class Products extends Component <Props, State> {
              name={product.name}
              shortDescription={product.short_description}
              price_html={product.price_html}
-             mainImage={product.images[0]} />
+             mainImage={product.images[0]}
+             clicked={this.detailHandler}
+              />
         ))
     )
 
@@ -76,7 +89,8 @@ class Products extends Component <Props, State> {
 
       const { error, 
               loading,
-              productItems
+              productItems,
+              isDetailView
        } = this.state; //Deconstruct
 
        let productContent;
@@ -99,6 +113,9 @@ class Products extends Component <Props, State> {
                 </IonToolbar>
               </IonHeader>
               <IonContent>
+                  <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
+                    <h1> -Product Details- </h1>
+                  </Modal>
                 { content }
               </IonContent>
             </IonPage>
