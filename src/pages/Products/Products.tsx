@@ -14,6 +14,7 @@ interface State {
   error: boolean,
   loading: boolean,
   isDetailView: boolean,
+  productDetail: any,
   productItems: any
 }
 
@@ -29,6 +30,7 @@ class Products extends Component <Props, State> {
         error: false,
         loading: true,
         isDetailView: false,
+        productDetail: "",
         productItems: []
     }
 
@@ -68,8 +70,22 @@ class Products extends Component <Props, State> {
     this.setState({isDetailView: false});
   }
 
-  detailHandler = () => {
-    this.setState({isDetailView: true});
+  detailHandler = (id) => {
+    let detailContent = "<h1> No Details </h1>";
+    this.WooCommerce.get('products/'+id, {'id': id })
+    .then( (response) => {
+      this.setState({ loading: true });
+        console.log("Product: ", response.data);
+        this.setState({ productDetail: detailContent });
+    })
+    .catch((error) => {
+        console.log("Error Data:", error.response.data);
+    })
+    .finally(() => {
+      this.setState({isDetailView: true});
+      this.setState({loading: false});
+    });
+    
   }
 
    displayProducts = productLists => (
@@ -80,7 +96,7 @@ class Products extends Component <Props, State> {
              shortDescription={product.short_description}
              price_html={product.price_html}
              mainImage={product.images[0]}
-             clicked={this.detailHandler}
+             clicked={() => this.detailHandler(product.id)}
               />
         ))
     )
@@ -90,7 +106,8 @@ class Products extends Component <Props, State> {
       const { error, 
               loading,
               productItems,
-              isDetailView
+              isDetailView,
+              productDetail
        } = this.state; //Deconstruct
 
        let productContent;
@@ -114,7 +131,7 @@ class Products extends Component <Props, State> {
               </IonHeader>
               <IonContent>
                   <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
-                    <h1> -Product Details- </h1>
+                     <div dangerouslySetInnerHTML={{__html: productDetail}}></div>
                   </Modal>
                 { content }
               </IonContent>
