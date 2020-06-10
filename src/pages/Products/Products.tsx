@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/react';
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 import ProductItems from "../../components/ProductItems/ProductItems";
@@ -66,16 +66,30 @@ class Products extends Component <Props, State> {
     });
   }
 
+  detailViews
+
   detailCancelHandler = () => {
     this.setState({isDetailView: false});
   }
 
   detailHandler = (id) => {
-    let detailContent = "<h1> No Details </h1>";
+    let detailContent = (<div> No Details </div>);
+    this.setState({ loading: true });
     this.WooCommerce.get('products/'+id, {'id': id })
     .then( (response) => {
-      this.setState({ loading: true });
         console.log("Product: ", response.data);
+        detailContent = ( 
+            <IonCard>
+              <img alt={response.data.images[0].name} src={response.data.images[0].src} style={{width: '200px'}} />
+               <IonCardHeader>
+                  <IonCardSubtitle> <strong>Category:</strong> {response.data.categories[0].name} </IonCardSubtitle>
+                  <IonCardTitle> {response.data.name} </IonCardTitle>
+               </IonCardHeader>
+               <IonCardContent >
+                 <div dangerouslySetInnerHTML={{__html: response.data.description}}></div>
+               </IonCardContent>
+            </IonCard>
+          );
         this.setState({ productDetail: detailContent });
     })
     .catch((error) => {
@@ -131,7 +145,7 @@ class Products extends Component <Props, State> {
               </IonHeader>
               <IonContent>
                   <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
-                     <div dangerouslySetInnerHTML={{__html: productDetail}}></div>
+                     {productDetail}
                   </Modal>
                 { content }
               </IonContent>
