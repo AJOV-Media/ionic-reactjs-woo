@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/react';
+import { IonButtons, IonMenuButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent } from '@ionic/react';
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 import ProductItems from "../../components/ProductItems/ProductItems";
@@ -35,11 +35,11 @@ class Products extends Component <Props, State> {
     }
 
     this.WooCommerce = new WooCommerceRestApi({
-      url: 'http://woocommerce.local:8090/',
+      url: 'https://woocommerce.local:8091/',
       consumerKey:  'ck_e69ffab389c5ab9957b0f3e67a0398047f9d62d9',
       consumerSecret:  'cs_30d030a4f3d6a1e132a9b0bdb8fc35f0b81171c7',
       version: "wc/v3",
-      verifySsl: false,
+      verifySsl: true,
       queryStringAuth: true  
     }); 
   
@@ -139,9 +139,12 @@ class Products extends Component <Props, State> {
         return (
             <IonPage>
               <IonHeader>
-                <IonToolbar>
-                  <IonTitle>Products</IonTitle>
-                </IonToolbar>
+              <IonToolbar>
+                <IonButtons slot="start">
+                  <IonMenuButton />
+                </IonButtons>
+                <IonTitle> Products </IonTitle>
+              </IonToolbar>
               </IonHeader>
               <IonContent>
                   <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
