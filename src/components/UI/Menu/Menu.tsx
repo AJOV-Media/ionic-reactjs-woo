@@ -11,18 +11,20 @@ import {
   IonNote,
 } from '@ionic/react';
 
-import { useLocation } from 'react-router-dom';
+//import { useLocation } from 'react-router-dom';
 import './Menu.css';
 
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
-import {  book, bookSharp, shirt, shirtSharp, peopleCircle, peopleCircleSharp } from "ionicons/icons";
+import {  book, bookSharp, shirt, shirtSharp, peopleCircle, peopleCircleSharp, bookmarkOutline } from "ionicons/icons";
 
 interface Props {
 
 }
 
 interface State { 
-   appPages: AppPage[]
+   error: boolean,
+   appPages: AppPage[],
+   categoryItems: any
 }
 
 interface AppPage {
@@ -39,6 +41,7 @@ class Menu extends Component <Props, State> {
   constructor(props: Props){
     super(props);
     this.state = {
+      error: false,
       appPages: [{
           title: 'Products',
           url: '/products',
@@ -56,7 +59,8 @@ class Menu extends Component <Props, State> {
             url: '/page/Favorites',
             iosIcon: book,
             mdIcon: bookSharp
-          }]
+          }],
+        categoryItems: []
     }
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -71,6 +75,24 @@ class Menu extends Component <Props, State> {
   }
 
   componentDidMount() {
+    this.WooCommerce.get('products/categories')
+    .then( (response) => {
+
+     Object.keys(response.data).forEach((key) => {
+      
+        this.setState({
+          categoryItems: [...this.state.categoryItems,  response.data[key]]
+        });
+     }); 
+
+    })
+    .catch((error) => {
+        console.log("Error Data:", error);
+        this.setState({ error: true});
+    })
+    .finally(() => {
+      //this.setState({ loading: false });
+    });
                        
   }
 
@@ -86,7 +108,7 @@ class Menu extends Component <Props, State> {
   )
   
   render() {
-    const {  appPages } = this.state;
+    const {  appPages, categoryItems } = this.state;
 
     return(
       <IonMenu contentId="main" type="overlay">
@@ -99,7 +121,12 @@ class Menu extends Component <Props, State> {
 
         <IonList id="labels-list">
           <IonListHeader> Categories</IonListHeader>
-         
+          {categoryItems.map((category, index) => (
+            <IonItem lines="none" key={index}>
+              <IonIcon slot="start" icon={bookmarkOutline} />
+              <IonLabel>{category.name}</IonLabel>
+            </IonItem>
+          ))}
         </IonList>
       </IonContent>
     </IonMenu>   
