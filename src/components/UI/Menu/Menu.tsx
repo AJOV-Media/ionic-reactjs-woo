@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, { Component } from 'react';
 import {
   IonContent,
   IonIcon,
@@ -8,23 +8,29 @@ import {
   IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonNote,
+  IonNote
 } from '@ionic/react';
 
 //import { useLocation } from 'react-router-dom';
 import './Menu.css';
 
-import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
-import {  book, bookSharp, shirt, shirtSharp, peopleCircle, peopleCircleSharp, bookmarkOutline } from "ionicons/icons";
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
+import {
+  book,
+  bookSharp,
+  shirt,
+  shirtSharp,
+  peopleCircle,
+  peopleCircleSharp,
+  bookmarkOutline
+} from 'ionicons/icons';
 
-interface Props {
+interface Props {}
 
-}
-
-interface State { 
-   error: boolean,
-   appPages: AppPage[],
-   categoryItems: any
+interface State {
+  error: boolean;
+  appPages: AppPage[];
+  categoryItems: any;
 }
 
 interface AppPage {
@@ -34,105 +40,104 @@ interface AppPage {
   title: string;
 }
 
-class Menu extends Component <Props, State> {
-
+class Menu extends Component<Props, State> {
   WooCommerce: any;
-  
-  constructor(props: Props){
+
+  constructor(props: Props) {
     super(props);
     this.state = {
       error: false,
-      appPages: [{
+      appPages: [
+        {
           title: 'Products',
           url: '/products',
           iosIcon: shirt,
           mdIcon: shirtSharp
         },
-          {
-            title: 'About',
-            url: '/page/Outbox',
-            iosIcon: peopleCircle,
-            mdIcon: peopleCircleSharp
-          },
-          {
-            title: 'Contact',
-            url: '/page/Favorites',
-            iosIcon: book,
-            mdIcon: bookSharp
-          }],
-        categoryItems: []
-    }
+        {
+          title: 'About',
+          url: '/page/Outbox',
+          iosIcon: peopleCircle,
+          mdIcon: peopleCircleSharp
+        },
+        {
+          title: 'Contact',
+          url: '/page/Favorites',
+          iosIcon: book,
+          mdIcon: bookSharp
+        }
+      ],
+      categoryItems: []
+    };
 
     this.WooCommerce = new WooCommerceRestApi({
       url: 'https://woocommerce.local:8091/',
-      consumerKey:  'ck_e69ffab389c5ab9957b0f3e67a0398047f9d62d9',
-      consumerSecret:  'cs_30d030a4f3d6a1e132a9b0bdb8fc35f0b81171c7',
-      version: "wc/v3",
+      consumerKey: 'ck_e69ffab389c5ab9957b0f3e67a0398047f9d62d9',
+      consumerSecret: 'cs_30d030a4f3d6a1e132a9b0bdb8fc35f0b81171c7',
+      version: 'wc/v3',
       verifySsl: true,
-      queryStringAuth: true  
-    }); 
-  
+      queryStringAuth: true
+    });
   }
 
   componentDidMount() {
     this.WooCommerce.get('products/categories')
-    .then( (response) => {
-
-     Object.keys(response.data).forEach((key) => {
-      
-        this.setState({
-          categoryItems: [...this.state.categoryItems,  response.data[key]]
+      .then((response) => {
+        Object.keys(response.data).forEach((key) => {
+          this.setState({
+            categoryItems: [...this.state.categoryItems, response.data[key]]
+          });
         });
-     }); 
-
-    })
-    .catch((error) => {
-        console.log("Error Data:", error);
-        this.setState({ error: true});
-    })
-    .finally(() => {
-      //this.setState({ loading: false });
-    });
-                       
+      })
+      .catch((error) => {
+        console.log('Error Data:', error);
+        this.setState({ error: true });
+      })
+      .finally(() => {
+        //this.setState({ loading: false });
+      });
   }
 
-  displayMainMenu = mainLists => (
+  displayMainMenu = (mainLists) =>
     mainLists.map((appPage, index) => (
-        <IonMenuToggle key={index} autoHide={false}>
-          <IonItem  routerLink={appPage.url} routerDirection="none" lines="none" detail={false}>
-            <IonIcon slot="start" icon={appPage.iosIcon} />
-            <IonLabel>{appPage.title}</IonLabel>
-          </IonItem>
-        </IonMenuToggle>
-    ))
-  )
-  
+      <IonMenuToggle key={index} autoHide={false}>
+        <IonItem
+          routerLink={appPage.url}
+          routerDirection="none"
+          lines="none"
+          detail={false}
+        >
+          <IonIcon slot="start" icon={appPage.iosIcon} />
+          <IonLabel>{appPage.title}</IonLabel>
+        </IonItem>
+      </IonMenuToggle>
+    ));
+
   render() {
-    const {  appPages, categoryItems } = this.state;
+    const { appPages, categoryItems } = this.state;
 
-    return(
+    return (
       <IonMenu contentId="main" type="overlay">
-      <IonContent>
-        <IonList id="inbox-list">
-          <IonListHeader>User/Guest</IonListHeader>
-          <IonNote>Hi and Welcome user or guest</IonNote>
-          {this.displayMainMenu(appPages)}
-        </IonList>
+        <IonContent>
+          <IonList id="inbox-list">
+            <IonListHeader>User/Guest</IonListHeader>
+            <IonNote>Hi and Welcome user or guest</IonNote>
+            {this.displayMainMenu(appPages)}
+          </IonList>
 
-        <IonList id="labels-list">
-          <IonListHeader> Categories</IonListHeader>
-          {categoryItems.map((category, index) => (
-            <IonItem lines="none" key={index}>
-              <IonIcon slot="start" icon={bookmarkOutline} />
-              <IonLabel>{category.name}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
-      </IonContent>
-    </IonMenu>   
+          <IonList id="labels-list">
+            <IonListHeader> Categories</IonListHeader>
+            {categoryItems.map((category, index) => (
+              <IonItem lines="none" key={index}>
+                <IonIcon slot="start" icon={bookmarkOutline} />
+                <IonLabel>{category.name}</IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+        </IonContent>
+      </IonMenu>
     );
   }
-
 }
 
 export default Menu;
