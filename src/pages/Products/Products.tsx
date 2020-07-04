@@ -13,12 +13,15 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonCardContent,
-  IonLoading
+  IonLoading,
+  IonButton,
+  IonIcon
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
 import ProductItems from '../../components/ProductItems/ProductItems';
 import Modal from '../../components/UI/Modal/Modal';
+import { addCircle } from 'ionicons/icons';
 
 interface Props {}
 
@@ -77,6 +80,18 @@ class Products extends Component<Props, State> {
     this.setState({ isDetailView: false });
   };
 
+  addToCart = (productId) => {
+    let retrieveCartObjects;
+
+    retrieveCartObjects = localStorage.getItem('wooReactCart');
+    let cartObjects = JSON.parse(retrieveCartObjects);
+
+    if (cartObjects === null) {
+      let addCartObject = { product_id: productId, howMany: 1 };
+      localStorage.setItem('wooReactCart', JSON.stringify(addCartObject));
+    }
+  };
+
   detailHandler = (id) => {
     let detailContent = <div> No Details </div>;
     this.setState({ loading: true });
@@ -95,7 +110,14 @@ class Products extends Component<Props, State> {
                 {' '}
                 <strong>Category:</strong> {response.data.categories[0].name}{' '}
               </IonCardSubtitle>
-              <IonCardTitle> {response.data.name} </IonCardTitle>
+              <IonCardTitle>
+                {' '}
+                {response.data.name}{' '}
+                <IonButton onClick={() => this.addToCart(id)}>
+                  {' '}
+                  Add to Cart <IonIcon icon={addCircle}></IonIcon>
+                </IonButton>{' '}
+              </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
               <div
