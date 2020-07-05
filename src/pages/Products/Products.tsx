@@ -32,8 +32,10 @@ interface State {
   error: boolean;
   loading: boolean;
   isDetailView: boolean;
+  currentProductCartCount: number;
   productDetail: any;
   productItems: any;
+  cartItems: any;
 }
 
 class Products extends Component<Props, State> {
@@ -45,8 +47,10 @@ class Products extends Component<Props, State> {
       error: false,
       loading: true,
       isDetailView: false,
+      currentProductCartCount: 0,
       productDetail: '',
-      productItems: []
+      productItems: [],
+      cartItems: []
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -87,15 +91,51 @@ class Products extends Component<Props, State> {
     let retrieveCartObjects;
 
     retrieveCartObjects = localStorage.getItem('wooReactCart');
-    let cartObjects = JSON.parse(retrieveCartObjects);
+    let cartObjects = JSON.parse(retrieveCartObjects || '[]');
 
-    if (cartObjects === null) {
+    if (cartObjects.length > 0) {
+      let updateCartObject = {};
+      let updatedCartObjects = JSON.parse('[]');
+      let alreadyAdded = false;
+      for (var i = 0; i < cartObjects.length; i++) {
+        if (cartObjects[i].product_id === productId) {
+          //if product id is already on the cart
+          alreadyAdded = true;
+          updateCartObject = {
+            product_id: cartObjects[i].product_id,
+            howMany: 5
+          };
+        } else {
+          updateCartObject = {
+            product_id: cartObjects[i].product_id,
+            howMany: cartObjects[i].howMany
+          };
+        }
+        updatedCartObjects.push(updateCartObject);
+      }
+      if (!alreadyAdded) {
+        updateCartObject = {
+          product_id: productId,
+          howMany: 1
+        };
+        updatedCartObjects.push(updateCartObject);
+        alreadyAdded = false;
+      }
+      localStorage.setItem('wooReactCart', JSON.stringify(updatedCartObjects));
+    } else {
+      //only if cart is all empty
       let addCartObject = { product_id: productId, howMany: 1 };
-      localStorage.setItem('wooReactCart', JSON.stringify(addCartObject));
+      cartObjects.push(addCartObject);
+      localStorage.setItem('wooReactCart', JSON.stringify(cartObjects));
     }
+
+    retrieveCartObjects = localStorage.getItem('wooReactCart');
+    let testObjects = JSON.parse(retrieveCartObjects || '[]');
+    console.log(testObjects);
   };
 
   detailHandler = (id) => {
+    const { currentProductCartCount } = this.state;
     let detailContent = <div> No Details </div>;
     this.setState({ loading: true });
     this.WooCommerce.get('products/' + id, { id: id })
@@ -120,7 +160,7 @@ class Products extends Component<Props, State> {
                   type="number"
                   className="addCartInput"
                   placeholder="How many?"
-                  value={0}
+                  value={currentProductCartCount}
                 ></IonInput>
                 <IonButton
                   className="addCartButton"
