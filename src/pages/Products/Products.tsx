@@ -15,13 +15,16 @@ import {
   IonCardContent,
   IonLoading,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonInput
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
 import ProductItems from '../../components/ProductItems/ProductItems';
 import Modal from '../../components/UI/Modal/Modal';
 import { addCircle } from 'ionicons/icons';
+
+import './Products.css';
 
 interface Props {}
 
@@ -113,7 +116,16 @@ class Products extends Component<Props, State> {
               <IonCardTitle>
                 {' '}
                 {response.data.name}{' '}
-                <IonButton onClick={() => this.addToCart(id)}>
+                <IonInput
+                  type="number"
+                  className="addCartInput"
+                  placeholder="How many?"
+                  value={0}
+                ></IonInput>
+                <IonButton
+                  className="addCartButton"
+                  onClick={() => this.addToCart(id)}
+                >
                   {' '}
                   Add to Cart <IonIcon icon={addCircle}></IonIcon>
                 </IonButton>{' '}
