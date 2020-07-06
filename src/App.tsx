@@ -36,23 +36,29 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
+import FloatingCart from './components/UI/FloatingCart/FloatingCart';
 
 const App: React.FC = () => (
   <IonApp>
+    <FloatingCart />
     <IonReactRouter>
       <IonSplitPane contentId="main">
         <Menu />
         <IonRouterOutlet id="main">
-        <IonTabs>
-            <IonRouterOutlet >
+          <IonTabs>
+            <IonRouterOutlet>
               <Route path="/products" component={Products} exact={true} />
               <Route path="/about" component={About} exact={true} />
               <Route path="/contact" component={Contact} exact={true} />
-              
-              <Route path="/" render={() => <Redirect to="/about" />} exact={true} />
+
+              <Route
+                path="/"
+                render={() => <Redirect to="/about" />}
+                exact={true}
+              />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-            <IonTabButton tab="products" href="/products">
+              <IonTabButton tab="products" href="/products">
                 <IonIcon icon={shirt} />
                 <IonLabel>Products</IonLabel>
               </IonTabButton>
@@ -66,8 +72,8 @@ const App: React.FC = () => (
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
-          </IonRouterOutlet> 
-      </IonSplitPane>  
+        </IonRouterOutlet>
+      </IonSplitPane>
     </IonReactRouter>
   </IonApp>
 );
