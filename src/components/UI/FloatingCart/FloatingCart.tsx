@@ -5,15 +5,39 @@ import { cartSharp } from 'ionicons/icons';
 
 type Props = {};
 
-type State = {};
+type State = {
+  cartCount: number;
+};
 
 class FloatingCart extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      cartCount: 0
+    };
+  }
+
+  componentDidMount() {
+    this.setCartCount();
+  }
+  setCartCount = () => {
+    let retrieveCartObjects;
+
+    retrieveCartObjects = localStorage.getItem('wooReactCart');
+    let cartObjects = JSON.parse(retrieveCartObjects || '[]');
+
+    if (cartObjects.length > 0) {
+      this.setState({ cartCount: cartObjects.length });
+    }
+  };
+
   render() {
+    const { cartCount } = this.state;
     return (
       <React.Fragment>
         <IonFab vertical="center" horizontal="end" slot="fixed">
           <IonBadge color="danger" className="cartCount">
-            66
+            {cartCount}
           </IonBadge>
           <IonFabButton>
             <IonIcon icon={cartSharp} />
