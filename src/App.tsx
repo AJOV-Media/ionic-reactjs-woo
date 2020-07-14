@@ -11,7 +11,7 @@ import {
   IonSplitPane
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, triangle, shirt } from 'ionicons/icons';
+import { ellipse, triangle, shirt, carOutline } from 'ionicons/icons';
 
 import Menu from './components/UI/Menu/Menu';
 import Products from './pages/Products/Products';
@@ -34,8 +34,13 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+/* Other Pages */
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
+import Cart from './pages/Cart/Cart';
+
+/* Component UI */
 import FloatingCart from './components/UI/FloatingCart/FloatingCart';
 
 const App: React.FC = () => (
@@ -50,6 +55,7 @@ const App: React.FC = () => (
               <Route path="/products" component={Products} exact={true} />
               <Route path="/about" component={About} exact={true} />
               <Route path="/contact" component={Contact} exact={true} />
+              <Route path="/cart" component={Cart} exact={true} />
 
               <Route
                 path="/"
@@ -69,6 +75,10 @@ const App: React.FC = () => (
               <IonTabButton tab="contact" href="/contact">
                 <IonIcon icon={ellipse} />
                 <IonLabel>Contact</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="cart" href="/cart">
+                <IonIcon icon={carOutline} />
+                <IonLabel>Cart</IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
