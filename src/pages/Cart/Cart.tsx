@@ -48,7 +48,6 @@ class Cart extends Component<Props, State> {
 
   componentDidMount() {
     let retrieveCartObjects;
-    const { totalPrice } = this.state;
 
     retrieveCartObjects = localStorage.getItem('wooReactCart');
     let cartObjects = JSON.parse(retrieveCartObjects || '[]');
@@ -57,9 +56,11 @@ class Cart extends Component<Props, State> {
       for (var i = 0; i < cartObjects.length; i++) {
         this.WooCommerce.get('products/' + cartObjects[i].product_id)
           .then((response) => {
-            this.setState({
-              totalPrice: totalPrice + Number(response.data.price)
-            });
+            this.subTotalInc(
+              Number(response.data.price),
+              this.state.totalPrice
+            );
+
             this.setState({
               productItems: [...this.state.productItems, response.data]
             });
@@ -73,6 +74,12 @@ class Cart extends Component<Props, State> {
       }
     }
   }
+
+  subTotalInc = (price, subTotal) => {
+    this.setState({
+      totalPrice: subTotal + price
+    });
+  };
 
   displayProducts = (productLists) =>
     productLists.length > 0 &&
