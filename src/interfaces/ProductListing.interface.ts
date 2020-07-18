@@ -3,6 +3,7 @@ export default interface ProductListing {
   name: string;
   shortDescription?: string;
   price_html?: string;
+  qty?: number;
   mainImage?: string;
   clicked?: any;
 }

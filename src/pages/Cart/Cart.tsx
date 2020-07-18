@@ -7,7 +7,8 @@ import {
   IonTitle,
   IonToolbar,
   IonList,
-  IonLoading
+  IonLoading,
+  IonFooter
 } from '@ionic/react';
 import React, { Component } from 'react';
 
@@ -20,6 +21,7 @@ interface State {
   error: boolean;
   loading: boolean;
   productItems: any;
+  totalPrice: number;
 }
 
 class Cart extends Component<Props, State> {
@@ -30,7 +32,8 @@ class Cart extends Component<Props, State> {
     this.state = {
       error: false,
       loading: true,
-      productItems: []
+      productItems: [],
+      totalPrice: 0.0
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -45,14 +48,18 @@ class Cart extends Component<Props, State> {
 
   componentDidMount() {
     let retrieveCartObjects;
+    const { totalPrice } = this.state;
 
-    retrieveCartObjects = localStorage.getItem('wooAngularCart');
+    retrieveCartObjects = localStorage.getItem('wooReactCart');
     let cartObjects = JSON.parse(retrieveCartObjects || '[]');
 
     if (cartObjects.length > 0) {
       for (var i = 0; i < cartObjects.length; i++) {
         this.WooCommerce.get('products/' + cartObjects[i].product_id)
           .then((response) => {
+            this.setState({
+              totalPrice: totalPrice + Number(response.data.price)
+            });
             this.setState({
               productItems: [...this.state.productItems, response.data]
             });
@@ -80,7 +87,7 @@ class Cart extends Component<Props, State> {
     ));
 
   render() {
-    const { error, loading, productItems } = this.state;
+    const { error, loading, productItems, totalPrice } = this.state;
     let productContent;
     if (error) {
       productContent = (
@@ -114,6 +121,15 @@ class Cart extends Component<Props, State> {
         </IonHeader>
 
         <IonContent>{content}</IonContent>
+
+        <IonFooter>
+          <IonToolbar>
+            <IonTitle size="small" slot="end">
+              <strong> Total: </strong>
+              {totalPrice.toFixed(2)}
+            </IonTitle>
+          </IonToolbar>
+        </IonFooter>
       </IonPage>
     );
   }
