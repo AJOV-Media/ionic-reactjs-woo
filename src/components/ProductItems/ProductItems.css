@@ -1,7 +1,11 @@
-.ProductItems {
-
+.item-input.sc-ion-label-md-h,
+.item-input .sc-ion-label-md-h {
+  -ms-flex: initial;
+  flex: initial;
+  max-width: 100%;
+  pointer-events: none;
 }
 
-.label-description{
-    margin-left: 20px;
+.label-description {
+  margin-left: 20px;
 }

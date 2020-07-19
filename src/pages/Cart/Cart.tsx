@@ -54,8 +54,10 @@ class Cart extends Component<Props, State> {
 
     if (cartObjects.length > 0) {
       for (var i = 0; i < cartObjects.length; i++) {
+        let howMany = cartObjects[i].howMany;
         this.WooCommerce.get('products/' + cartObjects[i].product_id)
           .then((response) => {
+            response.data.qty = howMany;
             this.subTotalInc(
               Number(response.data.price),
               this.state.totalPrice
@@ -90,6 +92,7 @@ class Cart extends Component<Props, State> {
         shortDescription={product.short_description}
         price_html={product.price_html}
         mainImage={product.images[0]}
+        qty={product.qty}
       />
     ));
 
