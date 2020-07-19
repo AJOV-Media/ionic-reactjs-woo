@@ -32,7 +32,6 @@ interface State {
   error: boolean;
   loading: boolean;
   isDetailView: boolean;
-  currentProductCartCount: number;
   productDetail: any;
   productItems: any;
   cartItems: any;
@@ -47,7 +46,6 @@ class Products extends Component<Props, State> {
       error: false,
       loading: true,
       isDetailView: false,
-      currentProductCartCount: 0,
       productDetail: '',
       productItems: [],
       cartItems: []
@@ -130,14 +128,25 @@ class Products extends Component<Props, State> {
     }
 
     retrieveCartObjects = localStorage.getItem('wooReactCart');
-    let testObjects = JSON.parse(retrieveCartObjects || '[]');
-    console.log(testObjects);
   };
 
   detailHandler = (id) => {
-    const { currentProductCartCount } = this.state;
+    let retrieveCartObjects;
+    let currentProductCartCount = 0;
     let detailContent = <div> No Details </div>;
     this.setState({ loading: true });
+
+    retrieveCartObjects = localStorage.getItem('wooReactCart');
+    let cartObjects = JSON.parse(retrieveCartObjects || '[]');
+
+    if (cartObjects.length > 0) {
+      for (var i = 0; i < cartObjects.length; i++) {
+        if (cartObjects[i].product_id === id) {
+          currentProductCartCount = cartObjects[i].howMany;
+        }
+      }
+    }
+
     this.WooCommerce.get('products/' + id, { id: id })
       .then((response) => {
         console.log('Product: ', response.data);
