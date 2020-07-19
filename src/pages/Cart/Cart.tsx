@@ -59,7 +59,7 @@ class Cart extends Component<Props, State> {
           .then((response) => {
             response.data.qty = howMany;
             this.subTotalInc(
-              Number(response.data.price),
+              Number(response.data.price) * response.data.qty,
               this.state.totalPrice
             );
 
