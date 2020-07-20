@@ -35,6 +35,7 @@ interface State {
   productDetail: any;
   productItems: any;
   cartItems: any;
+  currentCartQty: number;
 }
 
 class Products extends Component<Props, State> {
@@ -48,7 +49,8 @@ class Products extends Component<Props, State> {
       isDetailView: false,
       productDetail: '',
       productItems: [],
-      cartItems: []
+      cartItems: [],
+      currentCartQty: 1
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -79,13 +81,12 @@ class Products extends Component<Props, State> {
       });
   }
 
-  detailViews;
-
   detailCancelHandler = () => {
     this.setState({ isDetailView: false });
   };
 
   addToCart = (productId) => {
+    const { currentCartQty } = this.state;
     let retrieveCartObjects;
 
     retrieveCartObjects = localStorage.getItem('wooReactCart');
@@ -101,8 +102,9 @@ class Products extends Component<Props, State> {
           alreadyAdded = true;
           updateCartObject = {
             product_id: cartObjects[i].product_id,
-            howMany: 5
+            howMany: currentCartQty
           };
+          this.setState({ currentCartQty: 1 }); //Default to 1 again for input
         } else {
           updateCartObject = {
             product_id: cartObjects[i].product_id,
@@ -114,8 +116,9 @@ class Products extends Component<Props, State> {
       if (!alreadyAdded) {
         updateCartObject = {
           product_id: productId,
-          howMany: 1
+          howMany: currentCartQty
         };
+        this.setState({ currentCartQty: 1 }); //Default to 1 again for input
         updatedCartObjects.push(updateCartObject);
         alreadyAdded = false;
       }
@@ -130,9 +133,11 @@ class Products extends Component<Props, State> {
     retrieveCartObjects = localStorage.getItem('wooReactCart');
   };
 
+  inputCart = (qty) => this.setState({ currentCartQty: qty });
+
   detailHandler = (id) => {
     let retrieveCartObjects;
-    let currentProductCartCount = 0;
+    let currentProductCartCount = 1; //should be 1
     let detailContent = <div> No Details </div>;
     this.setState({ loading: true });
 
@@ -149,7 +154,6 @@ class Products extends Component<Props, State> {
 
     this.WooCommerce.get('products/' + id, { id: id })
       .then((response) => {
-        console.log('Product: ', response.data);
         detailContent = (
           <IonCard>
             <img
@@ -170,6 +174,9 @@ class Products extends Component<Props, State> {
                   className="addCartInput"
                   placeholder="How many?"
                   value={currentProductCartCount}
+                  onIonChange={(e) =>
+                    this.inputCart((e.target as HTMLInputElement).value)
+                  }
                 ></IonInput>
                 <IonButton
                   className="addCartButton"
