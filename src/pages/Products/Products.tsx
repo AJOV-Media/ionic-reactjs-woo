@@ -16,7 +16,8 @@ import {
   IonLoading,
   IonButton,
   IonIcon,
-  IonInput
+  IonInput,
+  IonToast
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
@@ -36,6 +37,7 @@ interface State {
   productItems: any;
   cartItems: any;
   currentCartQty: number;
+  showToast: boolean;
 }
 
 class Products extends Component<Props, State> {
@@ -50,7 +52,8 @@ class Products extends Component<Props, State> {
       productDetail: '',
       productItems: [],
       cartItems: [],
-      currentCartQty: 1
+      currentCartQty: 1,
+      showToast: false
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -91,6 +94,8 @@ class Products extends Component<Props, State> {
 
     retrieveCartObjects = localStorage.getItem('wooReactCart');
     let cartObjects = JSON.parse(retrieveCartObjects || '[]');
+
+    this.setState({ showToast: true });
 
     if (cartObjects.length > 0) {
       let updateCartObject = {};
@@ -134,6 +139,19 @@ class Products extends Component<Props, State> {
   };
 
   inputCart = (qty) => this.setState({ currentCartQty: qty });
+
+  showToast = (message) => {
+    const { showToast } = this.state;
+    return (
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => this.setState({ showToast: false })}
+        message={message}
+        position="middle"
+        duration={2000}
+      />
+    );
+  };
 
   detailHandler = (id) => {
     let retrieveCartObjects;
@@ -261,6 +279,7 @@ class Products extends Component<Props, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
+          {this.showToast('Added to Cart')}
           <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
             {productDetail}
           </Modal>
