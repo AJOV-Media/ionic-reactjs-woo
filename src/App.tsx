@@ -39,6 +39,7 @@ import './theme/variables.css';
 import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
 import Cart from './pages/Cart/Cart';
+import Login from './pages/Login/Login';
 
 /* Component UI */
 import FloatingCart from './components/UI/FloatingCart/FloatingCart';
@@ -56,6 +57,7 @@ const App: React.FC = () => (
               <Route path="/about" component={About} exact={true} />
               <Route path="/contact" component={Contact} exact={true} />
               <Route path="/cart" component={Cart} exact={true} />
+              <Route path="/login" component={Login} exact={true} />
 
               <Route
                 path="/"
