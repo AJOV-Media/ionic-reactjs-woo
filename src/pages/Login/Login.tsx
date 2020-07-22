@@ -30,7 +30,7 @@ class Login extends Component {
             <IonButtons slot="start">
               <IonMenuButton />
             </IonButtons>
-            <IonTitle> Products </IonTitle>
+            <IonTitle> Login </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>

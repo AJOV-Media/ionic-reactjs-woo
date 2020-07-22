@@ -43,6 +43,7 @@ import Login from './pages/Login/Login';
 
 /* Component UI */
 import FloatingCart from './components/UI/FloatingCart/FloatingCart';
+import Signup from './pages/Signup/Signup';
 
 const App: React.FC = () => (
   <IonApp>
@@ -58,6 +59,7 @@ const App: React.FC = () => (
               <Route path="/contact" component={Contact} exact={true} />
               <Route path="/cart" component={Cart} exact={true} />
               <Route path="/login" component={Login} exact={true} />
+              <Route path="/signup" component={Signup} exact={true} />
 
               <Route
                 path="/"
