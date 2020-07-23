@@ -19,7 +19,9 @@ import {
   IonButton,
   IonIcon,
   IonItemDivider,
-  IonTextarea
+  IonTextarea,
+  IonSelect,
+  IonSelectOption
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
 
@@ -98,6 +100,37 @@ class Signup extends Component {
                     maxlength={100}
                     placeholder="Your Billing Address 2"
                   ></IonTextarea>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Country</IonLabel>
+                  <IonSelect>
+                    <IonSelectOption value="PH">Philippines</IonSelectOption>
+                    <IonSelectOption value="JP">Japan</IonSelectOption>
+                    <IonSelectOption value="US">United States</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">State</IonLabel>
+                  <IonSelect>
+                    <IonSelectOption value="AL">Alabama</IonSelectOption>
+                    <IonSelectOption value="AR">Arkansas</IonSelectOption>
+                    <IonSelectOption value="">And so on</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">City </IonLabel>
+                  <IonInput type="text" placeholder="your City"></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Postal Code </IonLabel>
+                  <IonInput
+                    type="text"
+                    placeholder="your Postal Code"
+                  ></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Phone </IonLabel>
+                  <IonInput type="text" placeholder="your Phone"></IonInput>
                 </IonItem>
               </IonList>
               <IonButton expand="full" color="primary">
