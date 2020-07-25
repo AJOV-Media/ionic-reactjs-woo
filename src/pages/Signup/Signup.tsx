@@ -21,7 +21,8 @@ import {
   IonItemDivider,
   IonTextarea,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
+  IonCheckbox
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
 
@@ -99,6 +100,58 @@ class Signup extends Component {
                   <IonTextarea
                     maxlength={100}
                     placeholder="Your Billing Address 2"
+                  ></IonTextarea>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Country</IonLabel>
+                  <IonSelect>
+                    <IonSelectOption value="PH">Philippines</IonSelectOption>
+                    <IonSelectOption value="JP">Japan</IonSelectOption>
+                    <IonSelectOption value="US">United States</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">State</IonLabel>
+                  <IonSelect>
+                    <IonSelectOption value="AL">Alabama</IonSelectOption>
+                    <IonSelectOption value="AR">Arkansas</IonSelectOption>
+                    <IonSelectOption value="">And so on</IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">City </IonLabel>
+                  <IonInput type="text" placeholder="your City"></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Postal Code </IonLabel>
+                  <IonInput
+                    type="text"
+                    placeholder="your Postal Code"
+                  ></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Phone </IonLabel>
+                  <IonInput type="text" placeholder="your Phone"></IonInput>
+                </IonItem>
+                <IonItem>
+                  <IonLabel> Same as Billing address? </IonLabel>
+                  <IonCheckbox></IonCheckbox>
+                </IonItem>
+                <IonItemDivider color="tertiary">
+                  <IonLabel> Shipping information </IonLabel>
+                </IonItemDivider>
+                <IonItem>
+                  <IonLabel position="floating">Shipping Address 1</IonLabel>
+                  <IonTextarea
+                    maxlength={100}
+                    placeholder="Your Shipping Address 1"
+                  ></IonTextarea>
+                </IonItem>
+                <IonItem>
+                  <IonLabel position="floating">Shipping Address 2</IonLabel>
+                  <IonTextarea
+                    maxlength={100}
+                    placeholder="Your Shipping Address 2"
                   ></IonTextarea>
                 </IonItem>
                 <IonItem>
