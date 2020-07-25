@@ -5,7 +5,7 @@ export default interface UserFields {
   username?: string;
   password?: string;
   billing?: Billing;
-  shipping: Shipping;
+  shipping?: Shipping;
 }
 
 interface Billing {

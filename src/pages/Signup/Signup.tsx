@@ -25,9 +25,42 @@ import {
   IonCheckbox
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
+import UserFields from '../../interfaces/UserFields.interface';
 
-class Signup extends Component {
+interface Props {}
+
+interface State {
+  userFields: UserFields;
+}
+
+type UserfieldKeys = keyof State['userFields'];
+
+class Signup extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      userFields: {
+        email: ''
+      }
+    };
+  }
+
+  inputUserField = (key: UserfieldKeys, newValue) =>
+    this.setState((prevState) => ({
+      userFields: {
+        ...prevState.userFields,
+        [key]: newValue
+      }
+    }));
+
+  //Testing only state
+  checkState = () => {
+    const { userFields } = this.state;
+    console.log(userFields);
+  };
+
   render() {
+    const { userFields } = this.state;
     return (
       <IonPage>
         <IonHeader>
@@ -54,17 +87,41 @@ class Signup extends Component {
                   <IonInput
                     type="text"
                     placeholder="Your First Name"
+                    value={userFields.first_name}
+                    onIonChange={(e) =>
+                      this.inputUserField(
+                        'first_name',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Last Name </IonLabel>
-                  <IonInput type="text" placeholder="Your Last Name"></IonInput>
+                  <IonInput
+                    type="text"
+                    placeholder="Your Last Name"
+                    value={userFields.last_name}
+                    onIonChange={(e) =>
+                      this.inputUserField(
+                        'last_name',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Email </IonLabel>
                   <IonInput
                     type="text"
                     placeholder="Your Email address"
+                    value={userFields.email}
+                    onIonChange={(e) =>
+                      this.inputUserField(
+                        'email',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonInput>
                 </IonItem>
                 <IonItem>
@@ -76,7 +133,17 @@ class Signup extends Component {
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Password </IonLabel>
-                  <IonInput type="password" placeholder="Password"></IonInput>
+                  <IonInput
+                    type="password"
+                    placeholder="Password"
+                    value={userFields.password}
+                    onIonChange={(e) =>
+                      this.inputUserField(
+                        'password',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Confirm Password </IonLabel>
@@ -186,7 +253,11 @@ class Signup extends Component {
                   <IonInput type="text" placeholder="your Phone"></IonInput>
                 </IonItem>
               </IonList>
-              <IonButton expand="full" color="primary">
+              <IonButton
+                expand="full"
+                onClick={() => this.checkState()}
+                color="primary"
+              >
                 SIGNUP
                 <IonIcon slot="end" icon={paperPlane} />
               </IonButton>
