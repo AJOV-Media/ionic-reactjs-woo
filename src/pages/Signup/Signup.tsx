@@ -34,13 +34,16 @@ interface State {
 }
 
 type UserfieldKeys = keyof State['userFields'];
+type UserfieldBillingKeys = keyof State['userFields']['billing'];
 
 class Signup extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       userFields: {
-        email: ''
+        email: '',
+        billing: {},
+        shipping: {}
       }
     };
   }
@@ -50,6 +53,18 @@ class Signup extends Component<Props, State> {
       userFields: {
         ...prevState.userFields,
         [key]: newValue
+      }
+    }));
+
+  //Billing state object
+  inputUserBillingField = (key: UserfieldBillingKeys, newValue) =>
+    this.setState((prevState) => ({
+      userFields: {
+        ...prevState.userFields,
+        billing: {
+          ...prevState.userFields.billing,
+          [key]: newValue
+        }
       }
     }));
 
@@ -129,6 +144,13 @@ class Signup extends Component<Props, State> {
                   <IonInput
                     type="text"
                     placeholder="Username you prefer"
+                    value={userFields.username}
+                    onIonChange={(e) =>
+                      this.inputUserField(
+                        'username',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonInput>
                 </IonItem>
                 <IonItem>
@@ -160,6 +182,13 @@ class Signup extends Component<Props, State> {
                   <IonTextarea
                     maxlength={100}
                     placeholder="Your Billing Address 1"
+                    value={userFields.billing.address_1}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'address_1',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonTextarea>
                 </IonItem>
                 <IonItem>
@@ -167,11 +196,26 @@ class Signup extends Component<Props, State> {
                   <IonTextarea
                     maxlength={100}
                     placeholder="Your Billing Address 2"
+                    value={userFields.billing.address_2}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'address_2',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonTextarea>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Country</IonLabel>
-                  <IonSelect>
+                  <IonSelect
+                    value={userFields.billing.country}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'country',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  >
                     <IonSelectOption value="PH">Philippines</IonSelectOption>
                     <IonSelectOption value="JP">Japan</IonSelectOption>
                     <IonSelectOption value="US">United States</IonSelectOption>
@@ -179,7 +223,15 @@ class Signup extends Component<Props, State> {
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">State</IonLabel>
-                  <IonSelect>
+                  <IonSelect
+                    value={userFields.billing.state}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'state',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  >
                     <IonSelectOption value="AL">Alabama</IonSelectOption>
                     <IonSelectOption value="AR">Arkansas</IonSelectOption>
                     <IonSelectOption value="">And so on</IonSelectOption>
@@ -187,18 +239,45 @@ class Signup extends Component<Props, State> {
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">City </IonLabel>
-                  <IonInput type="text" placeholder="your City"></IonInput>
+                  <IonInput
+                    type="text"
+                    placeholder="your City"
+                    value={userFields.billing.city}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'city',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Postal Code </IonLabel>
                   <IonInput
                     type="text"
                     placeholder="your Postal Code"
+                    value={userFields.billing.postcode}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'postcode',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
                   ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Phone </IonLabel>
-                  <IonInput type="text" placeholder="your Phone"></IonInput>
+                  <IonInput
+                    type="text"
+                    placeholder="your Phone"
+                    value={userFields.billing.phone}
+                    onIonChange={(e) =>
+                      this.inputUserBillingField(
+                        'phone',
+                        (e.target as HTMLInputElement).value
+                      )
+                    }
+                  ></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel> Same as Billing address? </IonLabel>
