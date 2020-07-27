@@ -30,6 +30,7 @@ import UserFields from '../../interfaces/UserFields.interface';
 interface Props {}
 
 interface State {
+  copyBilling: boolean;
   userFields: UserFields;
 }
 
@@ -41,6 +42,7 @@ class Signup extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      copyBilling: false,
       userFields: {
         email: '',
         billing: {},
@@ -69,7 +71,7 @@ class Signup extends Component<Props, State> {
       }
     }));
 
-  //Billing state object
+  //Shipping state object
   inputUserShippingField = (key: UserfieldShippingKeys, newValue) =>
     this.setState((prevState) => ({
       userFields: {
@@ -81,14 +83,47 @@ class Signup extends Component<Props, State> {
       }
     }));
 
-  //Testing only state
-  checkState = () => {
-    const { userFields } = this.state;
-    console.log(userFields);
+  copyBillingToShipping = () => {
+    const { copyBilling, userFields } = this.state;
+    let currentCheck = !copyBilling;
+
+    this.setState({ copyBilling: currentCheck });
+
+    if (currentCheck) {
+      this.setState((prevState) => ({
+        userFields: {
+          ...prevState.userFields,
+          shipping: {
+            ...prevState.userFields.shipping,
+            address_1: userFields.billing.address_1,
+            address_2: userFields.billing.address_2,
+            city: userFields.billing.city,
+            state: userFields.billing.state,
+            postcode: userFields.billing.postcode,
+            country: userFields.billing.country
+          }
+        }
+      }));
+    } else {
+      this.setState((prevState) => ({
+        userFields: {
+          ...prevState.userFields,
+          shipping: {
+            ...prevState.userFields.shipping,
+            address_1: '',
+            address_2: '',
+            city: '',
+            state: '',
+            postcode: 0,
+            country: ''
+          }
+        }
+      }));
+    }
   };
 
   render() {
-    const { userFields } = this.state;
+    const { copyBilling, userFields } = this.state;
     return (
       <IonPage>
         <IonHeader>
@@ -294,7 +329,10 @@ class Signup extends Component<Props, State> {
                 </IonItem>
                 <IonItem>
                   <IonLabel> Same as Billing address? </IonLabel>
-                  <IonCheckbox></IonCheckbox>
+                  <IonCheckbox
+                    onIonChange={() => this.copyBillingToShipping()}
+                    checked={copyBilling}
+                  ></IonCheckbox>
                 </IonItem>
                 <IonItemDivider color="tertiary">
                   <IonLabel> Shipping information </IonLabel>
@@ -388,11 +426,7 @@ class Signup extends Component<Props, State> {
                   ></IonInput>
                 </IonItem>
               </IonList>
-              <IonButton
-                expand="full"
-                onClick={() => this.checkState()}
-                color="primary"
-              >
+              <IonButton expand="full" color="primary">
                 SIGNUP
                 <IonIcon slot="end" icon={paperPlane} />
               </IonButton>
