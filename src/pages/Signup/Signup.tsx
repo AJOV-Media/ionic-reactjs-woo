@@ -27,6 +27,8 @@ import {
 import { paperPlane } from 'ionicons/icons';
 import UserFields from '../../interfaces/UserFields.interface';
 
+import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
+
 interface Props {}
 
 interface State {
@@ -39,6 +41,8 @@ type UserfieldBillingKeys = keyof State['userFields']['billing'];
 type UserfieldShippingKeys = keyof State['userFields']['shipping'];
 
 class Signup extends Component<Props, State> {
+  WooCommerce: any;
+
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -49,6 +53,15 @@ class Signup extends Component<Props, State> {
         shipping: {}
       }
     };
+
+    this.WooCommerce = new WooCommerceRestApi({
+      url: 'https://woocommerce.local:8091/',
+      consumerKey: 'ck_e69ffab389c5ab9957b0f3e67a0398047f9d62d9',
+      consumerSecret: 'cs_30d030a4f3d6a1e132a9b0bdb8fc35f0b81171c7',
+      version: 'wc/v3',
+      verifySsl: true,
+      queryStringAuth: true
+    });
   }
 
   inputUserField = (key: UserfieldKeys, newValue) =>
@@ -120,6 +133,21 @@ class Signup extends Component<Props, State> {
         }
       }));
     }
+  };
+
+  registerCustomer = () => {
+    const { userFields } = this.state;
+
+    // trigger a loader here
+
+    this.WooCommerce.post('customers', userFields)
+      .then((response) => {
+        // Successful request
+      })
+      .catch((error) => {})
+      .finally(() => {
+        // Always executed.
+      });
   };
 
   render() {
@@ -426,7 +454,11 @@ class Signup extends Component<Props, State> {
                   ></IonInput>
                 </IonItem>
               </IonList>
-              <IonButton expand="full" color="primary">
+              <IonButton
+                expand="full"
+                color="primary"
+                onClick={() => this.registerCustomer()}
+              >
                 SIGNUP
                 <IonIcon slot="end" icon={paperPlane} />
               </IonButton>
