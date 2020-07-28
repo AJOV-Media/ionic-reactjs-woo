@@ -22,7 +22,11 @@ import {
   shirtSharp,
   peopleCircle,
   peopleCircleSharp,
-  bookmarkOutline
+  bookmarkOutline,
+  lockClosed,
+  lockClosedSharp,
+  paperPlane,
+  paperPlaneSharp
 } from 'ionicons/icons';
 
 interface Props {}
@@ -65,6 +69,18 @@ class Menu extends Component<Props, State> {
           url: '/page/Favorites',
           iosIcon: book,
           mdIcon: bookSharp
+        },
+        {
+          title: 'Login',
+          url: '/login',
+          iosIcon: lockClosed,
+          mdIcon: lockClosedSharp
+        },
+        {
+          title: 'Sign Up',
+          url: '/signup',
+          iosIcon: paperPlane,
+          mdIcon: paperPlaneSharp
         }
       ],
       categoryItems: []
