@@ -22,7 +22,9 @@ import {
   IonTextarea,
   IonSelect,
   IonSelectOption,
-  IonCheckbox
+  IonCheckbox,
+  IonLoading,
+  IonAlert
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
 import UserFields from '../../interfaces/UserFields.interface';
@@ -32,6 +34,8 @@ import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
 interface Props {}
 
 interface State {
+  loading: boolean;
+  showMessage: boolean;
   copyBilling: boolean;
   userFields: UserFields;
 }
@@ -46,6 +50,8 @@ class Signup extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      showMessage: false,
+      loading: false,
       copyBilling: false,
       userFields: {
         email: '',
@@ -138,20 +144,47 @@ class Signup extends Component<Props, State> {
   registerCustomer = () => {
     const { userFields } = this.state;
 
-    // trigger a loader here
-
+    this.setState({ loading: true });
     this.WooCommerce.post('customers', userFields)
       .then((response) => {
         // Successful request
+        this.setState({ showMessage: true });
       })
       .catch((error) => {})
       .finally(() => {
         // Always executed.
+        this.setState({ loading: false });
       });
   };
 
   render() {
-    const { copyBilling, userFields } = this.state;
+    const { showMessage, loading, copyBilling, userFields } = this.state;
+
+    let loader = loading ? (
+      <IonLoading
+        cssClass="woo-loader"
+        isOpen={loading}
+        spinner={'dots'}
+        message={'Creating your account, Please wait...'}
+      />
+    ) : (
+      ''
+    );
+
+    let alertShow = showMessage ? (
+      <IonAlert
+        isOpen={showMessage}
+        header={'Customer Registration'}
+        subHeader={'Welcome! one more step.'}
+        message={
+          'Your registration was successful! please verify your account with email we sent you'
+        }
+        buttons={['OK']}
+      />
+    ) : (
+      ''
+    );
+
     return (
       <IonPage>
         <IonHeader>
@@ -163,6 +196,8 @@ class Signup extends Component<Props, State> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
+          {loader}
+          {alertShow}
           <IonCard>
             <IonCardHeader>
               <IonCardTitle>Signup</IonCardTitle>
