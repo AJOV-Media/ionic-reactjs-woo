@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import {
   IonPage,
   IonHeader,
@@ -59,6 +60,26 @@ class Login extends Component<Props, State> {
       ...prevState,
       [key]: newValue
     }));
+
+  loginUser = () => {
+    const { username, password } = this.state;
+
+    let url = `https://woocommerce.local:8091/wp-json/jwt-auth/v1/token`;
+
+    const authData = {
+      email: username,
+      password: password
+    };
+
+    axios
+      .post(url, authData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   render() {
     const { loading, username, password } = this.state;
