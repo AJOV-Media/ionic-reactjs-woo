@@ -67,7 +67,7 @@ class Login extends Component<Props, State> {
     let url = `https://woocommerce.local:8091/wp-json/jwt-auth/v1/token`;
 
     const authData = {
-      email: username,
+      username: username,
       password: password
     };
 
@@ -143,7 +143,11 @@ class Login extends Component<Props, State> {
                   ></IonInput>
                 </IonItem>
               </IonList>
-              <IonButton expand="full" color="primary">
+              <IonButton
+                expand="full"
+                color="primary"
+                onClick={() => this.loginUser()}
+              >
                 LOGIN
                 <IonIcon slot="end" icon={lockOpen} />
               </IonButton>
