@@ -19,7 +19,9 @@ import {
   IonInput,
   IonButton,
   IonIcon,
-  IonLoading
+  IonLoading,
+  IonRow,
+  IonCol
 } from '@ionic/react';
 import { lockOpen } from 'ionicons/icons';
 
@@ -74,7 +76,7 @@ class Login extends Component<Props, State> {
     axios
       .post(url, authData)
       .then((response) => {
-        console.log(response);
+        localStorage.setItem('token', response.data.token);
       })
       .catch((err) => {
         console.log(err);
@@ -108,6 +110,16 @@ class Login extends Component<Props, State> {
         <IonContent>
           {loader}
           <IonCard>
+            <IonRow>
+              <IonCol col-4></IonCol>
+              <IonCol col-4>
+                <img
+                  alt="Woo API"
+                  src={process.env.PUBLIC_URL + '/assets/api-logo.png'}
+                />
+              </IonCol>
+              <IonCol col-4></IonCol>
+            </IonRow>
             <IonCardHeader>
               <IonCardTitle>Login</IonCardTitle>
               <IonCardSubtitle>WooCommerce Login Page</IonCardSubtitle>
