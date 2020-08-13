@@ -238,6 +238,7 @@ class Signup extends Component<Props, State> {
     let toastShow = showToast ? (
       <IonToast
         isOpen={showToast}
+        onDidDismiss={() => this.setState({ showToast: false })}
         message={toastMessage}
         color={toastColor}
         duration={3000}
