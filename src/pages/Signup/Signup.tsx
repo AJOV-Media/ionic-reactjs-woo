@@ -24,7 +24,8 @@ import {
   IonSelectOption,
   IonCheckbox,
   IonLoading,
-  IonAlert
+  IonAlert,
+  IonToast
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
 import UserFields from '../../interfaces/UserFields.interface';
@@ -36,6 +37,10 @@ interface Props {}
 interface State {
   loading: boolean;
   showMessage: boolean;
+  showToast: boolean;
+  emailAlreadyRegistered: boolean;
+  toastMessage: string;
+  toastColor: string;
   copyBilling: boolean;
   userFields: UserFields;
 }
@@ -51,6 +56,10 @@ class Signup extends Component<Props, State> {
     super(props);
     this.state = {
       showMessage: false,
+      showToast: false,
+      emailAlreadyRegistered: false,
+      toastMessage: '',
+      toastColor: '',
       loading: false,
       copyBilling: false,
       userFields: {
@@ -157,8 +166,49 @@ class Signup extends Component<Props, State> {
       });
   };
 
+  checkEmail = (theValue) => {
+    const { emailAlreadyRegistered } = this.state;
+
+    if (theValue === '') {
+      return true;
+    }
+
+    this.WooCommerce.get('customers', { email: theValue })
+      .then((response) => {
+        if (response.data[0].email) {
+          this.setState({
+            emailAlreadyRegistered: true,
+            showToast: true,
+            toastMessage: 'This email is not available',
+            toastColor: 'danger'
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('Error Data:', error);
+      })
+      .finally(() => {
+        if (!emailAlreadyRegistered) {
+          this.setState({
+            emailAlreadyRegistered: false,
+            showToast: true,
+            toastMessage: '"Email is available, you can use this email address',
+            toastColor: 'success'
+          });
+        }
+      });
+  };
+
   render() {
-    const { showMessage, loading, copyBilling, userFields } = this.state;
+    const {
+      showMessage,
+      showToast,
+      toastMessage,
+      toastColor,
+      loading,
+      copyBilling,
+      userFields
+    } = this.state;
 
     let loader = loading ? (
       <IonLoading
@@ -185,6 +235,18 @@ class Signup extends Component<Props, State> {
       ''
     );
 
+    let toastShow = showToast ? (
+      <IonToast
+        isOpen={showToast}
+        message={toastMessage}
+        color={toastColor}
+        duration={3000}
+        position="top"
+      />
+    ) : (
+      ''
+    );
+
     return (
       <IonPage>
         <IonHeader>
@@ -198,6 +260,7 @@ class Signup extends Component<Props, State> {
         <IonContent>
           {loader}
           {alertShow}
+          {toastShow}
           <IonCard>
             <IonCardHeader>
               <IonCardTitle>Signup</IonCardTitle>
@@ -247,6 +310,9 @@ class Signup extends Component<Props, State> {
                         'email',
                         (e.target as HTMLInputElement).value
                       )
+                    }
+                    onIonBlur={(e) =>
+                      this.checkEmail((e.target as HTMLInputElement).value)
                     }
                   ></IonInput>
                 </IonItem>
