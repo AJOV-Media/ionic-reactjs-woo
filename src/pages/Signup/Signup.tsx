@@ -25,7 +25,8 @@ import {
   IonCheckbox,
   IonLoading,
   IonAlert,
-  IonToast
+  IonToast,
+  IonFooter
 } from '@ionic/react';
 import { paperPlane } from 'ionicons/icons';
 import UserFields from '../../interfaces/UserFields.interface';
@@ -251,26 +252,27 @@ class Signup extends Component<Props, State> {
     );
 
     return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton />
-            </IonButtons>
-            <IonTitle> Signup </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {loader}
-          {alertShow}
-          {toastShow}
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>Signup</IonCardTitle>
-              <IonCardSubtitle>WooCommerce Signup</IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <form onSubmit={(e) => this.registerCustomer(e)}>
+      <form onSubmit={(e) => this.registerCustomer(e)}>
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonButtons slot="start">
+                <IonMenuButton />
+              </IonButtons>
+              <IonTitle> Signup </IonTitle>
+            </IonToolbar>
+          </IonHeader>
+
+          <IonContent>
+            {loader}
+            {alertShow}
+            {toastShow}
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Signup</IonCardTitle>
+                <IonCardSubtitle>WooCommerce Signup</IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent>
                 <IonList>
                   <IonItemDivider color="tertiary">
                     <IonLabel>Personal Details </IonLabel>
@@ -349,6 +351,7 @@ class Signup extends Component<Props, State> {
                           (e.target as HTMLInputElement).value
                         )
                       }
+                      required={true}
                     ></IonInput>
                   </IonItem>
                   <IonItem>
@@ -373,6 +376,7 @@ class Signup extends Component<Props, State> {
                           (e.target as HTMLInputElement).value
                         )
                       }
+                      required={true}
                     ></IonTextarea>
                   </IonItem>
                   <IonItem>
@@ -440,7 +444,7 @@ class Signup extends Component<Props, State> {
                   <IonItem>
                     <IonLabel position="floating">Postal Code </IonLabel>
                     <IonInput
-                      type="text"
+                      type="number"
                       placeholder="your Postal Code"
                       value={userFields.billing.postcode}
                       onIonChange={(e) =>
@@ -449,12 +453,15 @@ class Signup extends Component<Props, State> {
                           (e.target as HTMLInputElement).value
                         )
                       }
+                      required={true}
+                      minlength={4}
+                      maxlength={6}
                     ></IonInput>
                   </IonItem>
                   <IonItem>
                     <IonLabel position="floating">Phone </IonLabel>
                     <IonInput
-                      type="text"
+                      type="tel"
                       placeholder="your Phone"
                       value={userFields.billing.phone}
                       onIonChange={(e) =>
@@ -566,15 +573,19 @@ class Signup extends Component<Props, State> {
                     ></IonInput>
                   </IonItem>
                 </IonList>
-                <IonButton expand="full" color="primary" type="submit">
-                  SIGNUP
-                  <IonIcon slot="end" icon={paperPlane} />
-                </IonButton>
-              </form>
-            </IonCardContent>
-          </IonCard>
-        </IonContent>
-      </IonPage>
+              </IonCardContent>
+            </IonCard>
+          </IonContent>
+          <IonFooter>
+            <IonToolbar>
+              <IonButton expand="full" color="primary" type="submit">
+                SIGNUP
+                <IonIcon slot="end" icon={paperPlane} />
+              </IonButton>
+            </IonToolbar>
+          </IonFooter>
+        </IonPage>
+      </form>
     );
   }
 }
