@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 
 const currentUserSubject = new BehaviorSubject(
-  JSON.parse(localStorage.getItem('currentUser'))
+  localStorage.getItem('currentUser')
 );
 
 export const authenticationService = {
@@ -23,11 +23,28 @@ function login(username, password) {
   return fetch(
     `${process.env.REACT_APP_WOO_URL}wp-json/jwt-auth/v1/token`,
     requestOptions
-  ).then((user) => {
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    currentUserSubject.next(user);
+  )
+    .then(handleResponse)
+    .then((user) => {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      currentUserSubject.next(user);
 
-    return user;
+      return user;
+    });
+}
+
+function handleResponse(response) {
+  return response.text().then((text) => {
+    const data = text && JSON.parse(text);
+    if (!response.ok) {
+      if ([401, 403].indexOf(response.status) !== -1) {
+      }
+
+      const error = (data && data.message) || response.statusText;
+      return Promise.reject(error);
+    }
+
+    return data;
   });
 }
 

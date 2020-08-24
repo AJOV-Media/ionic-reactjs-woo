@@ -54,7 +54,14 @@ class Login extends Component<Props, State> {
   loginUser = () => {
     const { username, password } = this.state;
 
-    authenticationService.login(username, password).then();
+    authenticationService.login(username, password).then(
+      (user) => {
+        console.log('user');
+      },
+      (error) => {
+        console.log('there was an error');
+      }
+    );
   };
 
   render() {
