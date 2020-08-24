@@ -17,11 +17,11 @@ function login(username, password) {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ username: username, password: password })
   };
 
   return fetch(
-    `https://woocommerce.local:8091/wp-json/wpuser/v1/loggedinuser`,
+    `${process.env.REACT_APP_WOO_URL}wp-json/jwt-auth/v1/token`,
     requestOptions
   ).then((user) => {
     localStorage.setItem('currentUser', JSON.stringify(user));

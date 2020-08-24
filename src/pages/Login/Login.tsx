@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { authenticationService } from '../../_services/authentication.service';
 import {
   IonPage,
   IonHeader,
@@ -25,8 +25,6 @@ import {
 } from '@ionic/react';
 import { lockOpen } from 'ionicons/icons';
 
-import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
-
 interface Props {}
 
 interface State {
@@ -38,7 +36,6 @@ interface State {
 type StateKeys = keyof State;
 
 class Login extends Component<Props, State> {
-  WooCommerce: any;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -46,15 +43,6 @@ class Login extends Component<Props, State> {
       username: '',
       password: ''
     };
-
-    this.WooCommerce = new WooCommerceRestApi({
-      url: 'https://woocommerce.local:8091/',
-      consumerKey: 'ck_e69ffab389c5ab9957b0f3e67a0398047f9d62d9',
-      consumerSecret: 'cs_30d030a4f3d6a1e132a9b0bdb8fc35f0b81171c7',
-      version: 'wc/v3',
-      verifySsl: true,
-      queryStringAuth: true
-    });
   }
 
   inputUserField = (key: StateKeys, newValue) =>
@@ -66,21 +54,7 @@ class Login extends Component<Props, State> {
   loginUser = () => {
     const { username, password } = this.state;
 
-    let url = `https://woocommerce.local:8091/wp-json/jwt-auth/v1/token`;
-
-    const authData = {
-      username: username,
-      password: password
-    };
-
-    axios
-      .post(url, authData)
-      .then((response) => {
-        localStorage.setItem('token', response.data.token);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    authenticationService.login(username, password).then();
   };
 
   render() {
