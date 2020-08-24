@@ -27,7 +27,10 @@ import { addCircle } from 'ionicons/icons';
 
 import './Products.css';
 
-interface Props {}
+interface Props {
+  searchKey: string;
+  searchValue: string;
+}
 
 interface State {
   error: boolean;

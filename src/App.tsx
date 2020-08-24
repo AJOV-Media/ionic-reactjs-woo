@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -45,6 +45,13 @@ import Login from './pages/Login/Login';
 import FloatingCart from './components/UI/FloatingCart/FloatingCart';
 import Signup from './pages/Signup/Signup';
 
+interface MatchParams {
+  searchKey: string;
+  searchValue: string;
+}
+
+interface MatchProps extends RouteComponentProps<MatchParams> {}
+
 const App: React.FC = () => (
   <IonApp>
     <FloatingCart />
@@ -54,7 +61,15 @@ const App: React.FC = () => (
         <IonRouterOutlet id="main">
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/products" component={Products} exact={true} />
+              <Route
+                path="/products/:searchKey/:searchValue"
+                render={({ match }: MatchProps) => (
+                  <Products
+                    searchKey={match.params.searchKey}
+                    searchValue={match.params.searchValue}
+                  />
+                )}
+              />
               <Route path="/about" component={About} exact={true} />
               <Route path="/contact" component={Contact} exact={true} />
               <Route path="/cart" component={Cart} exact={true} />
