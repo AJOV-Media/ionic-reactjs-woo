@@ -21,7 +21,8 @@ import {
   IonIcon,
   IonLoading,
   IonRow,
-  IonCol
+  IonCol,
+  IonToast
 } from '@ionic/react';
 import { lockOpen } from 'ionicons/icons';
 
@@ -31,6 +32,9 @@ interface State {
   loading: boolean;
   username: string;
   password: string;
+  showToast: boolean;
+  toastMessage: string;
+  toastColor: string;
 }
 
 type StateKeys = keyof State;
@@ -41,7 +45,10 @@ class Login extends Component<Props, State> {
     this.state = {
       loading: false,
       username: '',
-      password: ''
+      password: '',
+      showToast: false,
+      toastMessage: '',
+      toastColor: ''
     };
   }
 
@@ -59,13 +66,24 @@ class Login extends Component<Props, State> {
         console.log('user');
       },
       (error) => {
-        console.log('there was an error');
+        this.setState({
+          showToast: true,
+          toastMessage: 'Error with request ' + error,
+          toastColor: 'danger'
+        });
       }
     );
   };
 
   render() {
-    const { loading, username, password } = this.state;
+    const {
+      loading,
+      username,
+      password,
+      showToast,
+      toastMessage,
+      toastColor
+    } = this.state;
 
     let loader = loading ? (
       <IonLoading
@@ -73,6 +91,19 @@ class Login extends Component<Props, State> {
         isOpen={loading}
         spinner={'dots'}
         message={'Creating your account, Please wait...'}
+      />
+    ) : (
+      ''
+    );
+
+    let toastShow = showToast ? (
+      <IonToast
+        isOpen={showToast}
+        onDidDismiss={() => this.setState({ showToast: false })}
+        message={toastMessage}
+        color={toastColor}
+        duration={3000}
+        position="top"
       />
     ) : (
       ''
@@ -90,6 +121,7 @@ class Login extends Component<Props, State> {
         </IonHeader>
         <IonContent>
           {loader}
+          {toastShow}
           <IonCard>
             <IonRow>
               <IonCol col-4></IonCol>
