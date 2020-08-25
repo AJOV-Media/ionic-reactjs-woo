@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { History } from 'history';
 import { authenticationService } from '../../_services/authentication.service';
 import {
   IonPage,
@@ -26,7 +27,9 @@ import {
 } from '@ionic/react';
 import { lockOpen } from 'ionicons/icons';
 
-interface Props {}
+interface Props {
+  history: History;
+}
 
 interface State {
   loading: boolean;
@@ -63,7 +66,12 @@ class Login extends Component<Props, State> {
 
     authenticationService.login(username, password).then(
       (user) => {
-        console.log('user');
+        this.setState({
+          showToast: true,
+          toastMessage: 'You are now logged in',
+          toastColor: 'success'
+        });
+        this.props.history.push('/cart');
       },
       (error) => {
         this.setState({
