@@ -157,6 +157,8 @@ class Menu extends Component<Props, State> {
         hideMenu = false;
       } else if (appPage.requireLogin === undefined) {
         hideMenu = false;
+      } else if (appPage.requireLogin === false && loggedIn === false) {
+        hideMenu = false;
       } else {
         hideMenu = true;
       }
