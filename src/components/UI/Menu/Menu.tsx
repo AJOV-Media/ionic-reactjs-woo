@@ -103,7 +103,7 @@ class Menu extends Component<Props, State> {
         },
         {
           title: 'Logout',
-          url: '/signup',
+          url: '/logout',
           requireLogin: true,
           iosIcon: logOut,
           mdIcon: logOutSharp

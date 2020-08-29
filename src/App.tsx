@@ -44,6 +44,7 @@ import Login from './pages/Login/Login';
 /* Component UI */
 import FloatingCart from './components/UI/FloatingCart/FloatingCart';
 import Signup from './pages/Signup/Signup';
+import Logout from './pages/Logout/Logout';
 
 interface MatchParams {
   searchKey: string;
@@ -74,6 +75,7 @@ const App: React.FC = () => (
               <Route path="/contact" component={Contact} exact={true} />
               <Route path="/cart" component={Cart} exact={true} />
               <Route path="/login" component={Login} exact={true} />
+              <Route path="/logout" component={Logout} exact={true} />
               <Route path="/signup" component={Signup} exact={true} />
 
               <Route
