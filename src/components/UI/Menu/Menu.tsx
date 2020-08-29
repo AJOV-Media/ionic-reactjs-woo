@@ -27,7 +27,11 @@ import {
   lockClosed,
   lockClosedSharp,
   paperPlane,
-  paperPlaneSharp
+  paperPlaneSharp,
+  person,
+  personSharp,
+  logOut,
+  logOutSharp
 } from 'ionicons/icons';
 
 interface Props {}
@@ -94,15 +98,15 @@ class Menu extends Component<Props, State> {
           title: 'My Account',
           url: '/myaccount',
           requireLogin: true,
-          iosIcon: paperPlane,
-          mdIcon: paperPlaneSharp
+          iosIcon: person,
+          mdIcon: personSharp
         },
         {
           title: 'Logout',
           url: '/signup',
           requireLogin: true,
-          iosIcon: paperPlane,
-          mdIcon: paperPlaneSharp
+          iosIcon: logOut,
+          mdIcon: logOutSharp
         }
       ],
       categoryItems: []
