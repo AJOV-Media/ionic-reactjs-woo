@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { authenticationService } from '../../../_services/authentication.service';
 import {
   IonContent,
   IonIcon,
@@ -32,6 +33,7 @@ import {
 interface Props {}
 
 interface State {
+  currentUser: any;
   error: boolean;
   appPages: AppPage[];
   categoryItems: any;
@@ -50,6 +52,7 @@ class Menu extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      currentUser: authenticationService.currentUserValue,
       error: false,
       appPages: [
         {
@@ -114,7 +117,7 @@ class Menu extends Component<Props, State> {
       });
   }
 
-  displayMainMenu = (mainLists) =>
+  displayMainMenu = (mainLists, currentUser) =>
     mainLists.map((appPage, index) => (
       <IonMenuToggle key={index} autoHide={false}>
         <IonItem
@@ -130,15 +133,20 @@ class Menu extends Component<Props, State> {
     ));
 
   render() {
-    const { appPages, categoryItems } = this.state;
+    const { appPages, categoryItems, currentUser } = this.state;
 
     return (
       <IonMenu contentId="main" type="overlay">
         <IonContent>
           <IonList id="inbox-list">
-            <IonListHeader>User/Guest</IonListHeader>
-            <IonNote>Hi and Welcome user or guest</IonNote>
-            {this.displayMainMenu(appPages)}
+            <IonListHeader>Woo Ionic Demo</IonListHeader>
+            <IonNote>
+              Hi and Welcome{' '}
+              {currentUser.user_display_name
+                ? currentUser.user_display_name
+                : 'Guest'}
+            </IonNote>
+            {this.displayMainMenu(appPages, currentUser)}
           </IonList>
 
           <IonList id="labels-list">

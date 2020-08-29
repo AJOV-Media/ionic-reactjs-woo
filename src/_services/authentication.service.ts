@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 
 const currentUserSubject = new BehaviorSubject(
-  localStorage.getItem('currentUser')
+  JSON.parse(localStorage.getItem('currentUser') || '{}')
 );
 
 export const authenticationService = {
