@@ -34,6 +34,7 @@ interface Props {}
 
 interface State {
   currentUser: any;
+  loggedIn: boolean;
   error: boolean;
   appPages: AppPage[];
   categoryItems: any;
@@ -42,6 +43,7 @@ interface State {
 interface AppPage {
   url: string;
   iosIcon: string;
+  requireLogin?: boolean;
   mdIcon: string;
   title: string;
 }
@@ -54,6 +56,7 @@ class Menu extends Component<Props, State> {
     this.state = {
       currentUser: authenticationService.currentUserValue,
       error: false,
+      loggedIn: false,
       appPages: [
         {
           title: 'Products',
@@ -76,12 +79,28 @@ class Menu extends Component<Props, State> {
         {
           title: 'Login',
           url: '/login',
+          requireLogin: false,
           iosIcon: lockClosed,
           mdIcon: lockClosedSharp
         },
         {
           title: 'Sign Up',
           url: '/signup',
+          requireLogin: false,
+          iosIcon: paperPlane,
+          mdIcon: paperPlaneSharp
+        },
+        {
+          title: 'My Account',
+          url: '/myaccount',
+          requireLogin: true,
+          iosIcon: paperPlane,
+          mdIcon: paperPlaneSharp
+        },
+        {
+          title: 'Logout',
+          url: '/signup',
+          requireLogin: true,
           iosIcon: paperPlane,
           mdIcon: paperPlaneSharp
         }
@@ -100,6 +119,14 @@ class Menu extends Component<Props, State> {
   }
 
   componentDidMount() {
+    const { currentUser } = this.state;
+
+    if (currentUser.user_display_name) {
+      this.setState({
+        loggedIn: true
+      });
+    }
+
     this.WooCommerce.get('products/categories')
       .then((response) => {
         Object.keys(response.data).forEach((key) => {
@@ -117,23 +144,37 @@ class Menu extends Component<Props, State> {
       });
   }
 
-  displayMainMenu = (mainLists, currentUser) =>
-    mainLists.map((appPage, index) => (
-      <IonMenuToggle key={index} autoHide={false}>
-        <IonItem
-          routerLink={appPage.url}
-          routerDirection="none"
-          lines="none"
-          detail={false}
-        >
-          <IonIcon slot="start" icon={appPage.iosIcon} />
-          <IonLabel>{appPage.title}</IonLabel>
-        </IonItem>
-      </IonMenuToggle>
-    ));
+  displayMainMenu = () => {
+    const { appPages, loggedIn } = this.state;
+
+    return appPages.map((appPage, index) => {
+      let hideMenu: boolean;
+      if (appPage.requireLogin === true && loggedIn === true) {
+        hideMenu = false;
+      } else if (appPage.requireLogin === undefined) {
+        hideMenu = false;
+      } else {
+        hideMenu = true;
+      }
+
+      return (
+        <IonMenuToggle key={index} autoHide={false} hidden={hideMenu}>
+          <IonItem
+            routerLink={appPage.url}
+            routerDirection="none"
+            lines="none"
+            detail={false}
+          >
+            <IonIcon slot="start" icon={appPage.iosIcon} />
+            <IonLabel>{appPage.title}</IonLabel>
+          </IonItem>
+        </IonMenuToggle>
+      );
+    });
+  };
 
   render() {
-    const { appPages, categoryItems, currentUser } = this.state;
+    const { categoryItems, currentUser } = this.state;
 
     return (
       <IonMenu contentId="main" type="overlay">
@@ -146,7 +187,7 @@ class Menu extends Component<Props, State> {
                 ? currentUser.user_display_name
                 : 'Guest'}
             </IonNote>
-            {this.displayMainMenu(appPages, currentUser)}
+            {this.displayMainMenu()}
           </IonList>
 
           <IonList id="labels-list">
