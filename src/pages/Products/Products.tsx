@@ -70,7 +70,15 @@ class Products extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.WooCommerce.get('products', { page: 1 })
+    const { searchKey, searchValue } = this.props;
+
+    let params = { page: 1 };
+
+    Object.assign(params, { [searchKey]: searchValue });
+
+    console.log(params);
+
+    this.WooCommerce.get('products', params)
       .then((response) => {
         Object.keys(response.data).forEach((key) => {
           this.setState({
