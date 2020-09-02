@@ -62,6 +62,7 @@ const App: React.FC = () => (
         <IonRouterOutlet id="main">
           <IonTabs>
             <IonRouterOutlet>
+              <Route path="/products" component={Products} exact={true} />
               <Route
                 path="/products/:searchKey/:searchValue"
                 render={({ match }: MatchProps) => (

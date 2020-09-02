@@ -74,9 +74,9 @@ class Products extends Component<Props, State> {
 
     let params = { page: 1 };
 
-    Object.assign(params, { [searchKey]: searchValue });
-
-    console.log(params);
+    if (searchKey) {
+      Object.assign(params, { [searchKey]: searchValue });
+    }
 
     this.WooCommerce.get('products', params)
       .then((response) => {
