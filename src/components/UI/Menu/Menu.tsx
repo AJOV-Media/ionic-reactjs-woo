@@ -199,7 +199,11 @@ class Menu extends Component<Props, State> {
           <IonList id="labels-list">
             <IonListHeader> Categories</IonListHeader>
             {categoryItems.map((category, index) => (
-              <IonItem lines="none" key={index}>
+              <IonItem
+                lines="none"
+                key={index}
+                routerLink={'/products/category/' + category.id}
+              >
                 <IonIcon slot="start" icon={bookmarkOutline} />
                 <IonLabel>{category.name}</IonLabel>
               </IonItem>
