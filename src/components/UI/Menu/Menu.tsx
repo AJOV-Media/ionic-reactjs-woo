@@ -202,7 +202,7 @@ class Menu extends Component<Props, State> {
               <IonItem
                 lines="none"
                 key={index}
-                href={'/products/category/' + category.id}
+                routerLink={'/products/category/' + category.id}
               >
                 <IonIcon slot="start" icon={bookmarkOutline} />
                 <IonLabel>{category.name}</IonLabel>

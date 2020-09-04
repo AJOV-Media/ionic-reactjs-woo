@@ -69,7 +69,23 @@ class Products extends Component<Props, State> {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.searchKey !== this.props.searchKey ||
+      prevProps.searchValue !== this.props.searchValue
+    ) {
+      this.setState({
+        productItems: []
+      });
+      this.loadTheProducts();
+    }
+  }
+
   componentDidMount() {
+    this.loadTheProducts();
+  }
+
+  loadTheProducts = () => {
     const { searchKey, searchValue } = this.props;
 
     let params = { page: 1 };
@@ -93,7 +109,7 @@ class Products extends Component<Props, State> {
       .finally(() => {
         this.setState({ loading: false });
       });
-  }
+  };
 
   detailCancelHandler = () => {
     this.setState({ isDetailView: false });
