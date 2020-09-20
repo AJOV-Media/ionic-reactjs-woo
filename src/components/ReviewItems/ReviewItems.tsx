@@ -1,5 +1,5 @@
-import { IonCol, IonIcon, IonRow } from '@ionic/react';
-import { star } from 'ionicons/icons';
+import { IonChip, IonCol, IonIcon, IonLabel, IonRow } from '@ionic/react';
+import { calendar, contract, mail, star } from 'ionicons/icons';
 import React, { Component } from 'react';
 import Reviews from '../../interfaces/Reviews.interface';
 
@@ -8,18 +8,16 @@ class ReviewItems extends Component<Reviews> {
     const {
       id,
       date_created,
-      product_id,
       status,
       reviewer,
       reviewer_email,
       review,
-      rating,
-      verified
+      rating
     } = this.props;
     return (
       <IonRow key={id}>
         <IonCol size="2">
-          <strong> {reviewer} </strong>
+          <strong> {reviewer} </strong> <br />
           {rating >= 1 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
           {rating >= 2 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
           {rating >= 3 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
@@ -27,12 +25,21 @@ class ReviewItems extends Component<Reviews> {
           {rating >= 5 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
         </IonCol>
         <IonCol size="10">
-          <strong> {reviewer_email} </strong>
-          <small>{date_created}</small>
+          <IonChip color="secondary">
+            <IonIcon icon={mail} color="primary" />
+            <IonLabel color="dark">{reviewer_email}</IonLabel>
+          </IonChip>
+          <IonChip color="secondary">
+            <IonIcon icon={calendar} color="primary" />
+            <IonLabel color="dark">{date_created}</IonLabel>
+          </IonChip>
+          <IonChip color="secondary">
+            <IonIcon icon={contract} color="primary" />
+            <IonLabel color="dark"> {status}</IonLabel>
+          </IonChip>
+
+          <br />
           <span> {review} </span>
-          <span> {product_id} </span>
-          <span> {status} </span>
-          <span> {verified} </span>
         </IonCol>
       </IonRow>
     );

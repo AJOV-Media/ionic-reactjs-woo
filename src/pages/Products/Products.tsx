@@ -204,8 +204,6 @@ class Products extends Component<Props, State> {
       (response) => {
         if (response.data.length > 0) {
           currentRating = this.displayProductReview(response.data);
-        } else {
-          console.log('No data');
         }
       },
       (err) => {
@@ -273,13 +271,11 @@ class Products extends Component<Props, State> {
     reviews.length > 0 &&
     reviews.map((review) => (
       <ReviewItems
-        product_id={review.product_id}
         date_created={review.date_created}
         id={review.id}
         status={review.status}
         reviewer={review.reviewer}
         reviewer_email={review.reviewer_email}
-        verified={review.verified}
         rating={review.rating}
         review={review.review}
       />
