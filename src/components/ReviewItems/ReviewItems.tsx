@@ -14,22 +14,25 @@ class ReviewItems extends Component<Reviews> {
       reviewer_email,
       review,
       rating,
-      varified
+      verified
     } = this.props;
     return (
       <IonRow key={id}>
         <IonCol size="2">
           <strong> {reviewer} </strong>
-          {rating >= 1 ? <IonIcon size="small" name={star}></IonIcon> : ''}
-          {rating >= 2 ? <IonIcon size="small" name={star}></IonIcon> : ''}
-          {rating >= 3 ? <IonIcon size="small" name={star}></IonIcon> : ''}
-          {rating >= 4 ? <IonIcon size="small" name={star}></IonIcon> : ''}
-          {rating >= 5 ? <IonIcon size="small" name={star}></IonIcon> : ''}
+          {rating >= 1 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
+          {rating >= 2 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
+          {rating >= 3 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
+          {rating >= 4 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
+          {rating >= 5 ? <IonIcon size="small" icon={star}></IonIcon> : ''}
         </IonCol>
         <IonCol size="10">
           <strong> {reviewer_email} </strong>
           <small>{date_created}</small>
           <span> {review} </span>
+          <span> {product_id} </span>
+          <span> {status} </span>
+          <span> {verified} </span>
         </IonCol>
       </IonRow>
     );

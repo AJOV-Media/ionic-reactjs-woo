@@ -17,7 +17,8 @@ import {
   IonButton,
   IonIcon,
   IonInput,
-  IonToast
+  IonToast,
+  IonGrid
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
@@ -26,6 +27,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import { addCircle } from 'ionicons/icons';
 
 import './Products.css';
+import ReviewItems from '../../components/ReviewItems/ReviewItems';
 
 interface Props {
   searchKey: string;
@@ -181,12 +183,12 @@ class Products extends Component<Props, State> {
   };
 
   detailHandler = (id) => {
-    let retrieveCartObjects;
     let currentProductCartCount = 1; //should be 1
     let detailContent = <div> No Details </div>;
+    let currentRating = <div> No ratings </div>;
     this.setState({ loading: true });
 
-    retrieveCartObjects = localStorage.getItem('wooReactCart');
+    const retrieveCartObjects = localStorage.getItem('wooReactCart');
     let cartObjects = JSON.parse(retrieveCartObjects || '[]');
 
     if (cartObjects.length > 0) {
@@ -196,6 +198,20 @@ class Products extends Component<Props, State> {
         }
       }
     }
+
+    //Get Ratings
+    this.WooCommerce.get('products/reviews/?product=' + id, { id: id }).then(
+      (response) => {
+        if (response.data.length > 0) {
+          currentRating = this.displayProductReview(response.data);
+        } else {
+          console.log('No data');
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
 
     this.WooCommerce.get('products/' + id, { id: id })
       .then((response) => {
@@ -233,6 +249,9 @@ class Products extends Component<Props, State> {
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
+              <IonGrid>{currentRating}</IonGrid>
+            </IonCardContent>
+            <IonCardContent>
               <div
                 dangerouslySetInnerHTML={{ __html: response.data.description }}
               ></div>
@@ -249,6 +268,22 @@ class Products extends Component<Props, State> {
         this.setState({ loading: false });
       });
   };
+
+  displayProductReview = (reviews) =>
+    reviews.length > 0 &&
+    reviews.map((review) => (
+      <ReviewItems
+        product_id={review.product_id}
+        date_created={review.date_created}
+        id={review.id}
+        status={review.status}
+        reviewer={review.reviewer}
+        reviewer_email={review.reviewer_email}
+        verified={review.verified}
+        rating={review.rating}
+        review={review.review}
+      />
+    ));
 
   displayProducts = (productLists) =>
     productLists.length > 0 &&
