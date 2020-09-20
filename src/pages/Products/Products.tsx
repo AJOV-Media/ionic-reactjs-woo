@@ -186,6 +186,7 @@ class Products extends Component<Props, State> {
     let currentProductCartCount = 1; //should be 1
     let detailContent = <div> No Details </div>;
     let currentRating = <div> No ratings </div>;
+    let buttonAddCart = 'Add to Cart';
     this.setState({ loading: true });
 
     const retrieveCartObjects = localStorage.getItem('wooReactCart');
@@ -195,6 +196,7 @@ class Products extends Component<Props, State> {
       for (var i = 0; i < cartObjects.length; i++) {
         if (cartObjects[i].product_id === id) {
           currentProductCartCount = cartObjects[i].howMany;
+          buttonAddCart = 'Update Cart';
         }
       }
     }
@@ -222,12 +224,11 @@ class Products extends Component<Props, State> {
             />
             <IonCardHeader>
               <IonCardSubtitle>
-                {' '}
-                <strong>Category:</strong> {response.data.categories[0].name}{' '}
+                <strong>Category:</strong>
+                {response.data.categories[0].name}
               </IonCardSubtitle>
               <IonCardTitle>
-                {' '}
-                {response.data.name}{' '}
+                {response.data.name}
                 <IonInput
                   type="number"
                   className="addCartInput"
@@ -241,9 +242,8 @@ class Products extends Component<Props, State> {
                   className="addCartButton"
                   onClick={() => this.addToCart(id)}
                 >
-                  {' '}
-                  Add to Cart <IonIcon icon={addCircle}></IonIcon>
-                </IonButton>{' '}
+                  {buttonAddCart} <IonIcon icon={addCircle}></IonIcon>
+                </IonButton>
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
