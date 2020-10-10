@@ -28,6 +28,7 @@ import { addCircle } from 'ionicons/icons';
 
 import './Products.css';
 import ReviewItems from '../../components/ReviewItems/ReviewItems';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 interface Props {
   searchKey: string;
@@ -42,6 +43,7 @@ interface State {
   productItems: any;
   cartItems: any;
   currentCartQty: number;
+  currentPage: number;
   showToast: boolean;
 }
 
@@ -58,6 +60,7 @@ class Products extends Component<Props, State> {
       productItems: [],
       cartItems: [],
       currentCartQty: 1,
+      currentPage: 1,
       showToast: false
     };
 
@@ -89,8 +92,9 @@ class Products extends Component<Props, State> {
 
   loadTheProducts = () => {
     const { searchKey, searchValue } = this.props;
+    const { currentPage } = this.state;
 
-    let params = { page: 1 };
+    let params = { page: currentPage };
 
     if (searchKey) {
       Object.assign(params, { [searchKey]: searchValue });
@@ -315,16 +319,21 @@ class Products extends Component<Props, State> {
       productContent = this.displayProducts(productItems);
     }
 
-    let content = loading ? (
-      <IonLoading
-        cssClass="woo-loader"
-        isOpen={loading}
-        spinner={'dots'}
-        message={'Please wait...'}
-      />
-    ) : (
-      <IonList>{productContent} </IonList>
-    );
+
+    let content =  <InfiniteScroll
+    dataLength={this.state.productItems.length}
+    next={this.loadTheProducts}
+    hasMore={true}
+    loader={  <IonLoading
+      cssClass="woo-loader"
+      isOpen={loading}
+      spinner={'dots'}
+      message={'Please wait...'}
+    />}
+  >
+    {this.displayProducts(productItems)}
+    
+  </InfiniteScroll>
 
     return (
       <IonPage>
