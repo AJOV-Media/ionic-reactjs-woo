@@ -7,7 +7,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonList,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -18,7 +17,8 @@ import {
   IonIcon,
   IonInput,
   IonToast,
-  IonGrid
+  IonGrid,
+  withIonLifeCycle
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
@@ -45,10 +45,12 @@ interface State {
   currentCartQty: number;
   currentPage: number;
   showToast: boolean;
+  scrollHeight: number;
 }
 
 class Products extends Component<Props, State> {
   WooCommerce: any;
+  scrollableContent: React.RefObject<HTMLIonContentElement>;
 
   constructor(props: Props) {
     super(props);
@@ -61,7 +63,8 @@ class Products extends Component<Props, State> {
       cartItems: [],
       currentCartQty: 1,
       currentPage: 1,
-      showToast: false
+      showToast: false,
+      scrollHeight: 0
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -72,9 +75,11 @@ class Products extends Component<Props, State> {
       verifySsl: process.env.REACT_APP_WOO_VERIFY_SSL,
       queryStringAuth: process.env.REACT_APP_WOO_QUERY_STRING_AUTH
     });
+
+    this.scrollableContent = React.createRef();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       prevProps.searchKey !== this.props.searchKey ||
       prevProps.searchValue !== this.props.searchValue
@@ -84,9 +89,17 @@ class Products extends Component<Props, State> {
       });
       this.loadTheProducts();
     }
+
+    let scrollableContent = this!.scrollableContent!.current!.offsetHeight - 10;
+
+    if (prevState.scrollHeight !== scrollableContent) {
+      this.setState({
+        scrollHeight: scrollableContent
+      });
+    }
   }
 
-  componentDidMount() {
+  ionViewDidEnter() {
     this.loadTheProducts();
   }
 
@@ -112,9 +125,7 @@ class Products extends Component<Props, State> {
         console.log('Error Data:', error);
         this.setState({ error: true });
       })
-      .finally(() => {
-        this.setState({ loading: false });
-      });
+      .finally(() => {});
   };
 
   detailCancelHandler = () => {
@@ -304,7 +315,8 @@ class Products extends Component<Props, State> {
       loading,
       productItems,
       isDetailView,
-      productDetail
+      productDetail,
+      scrollHeight
     } = this.state; //Deconstruct
 
     let productContent;
@@ -319,21 +331,32 @@ class Products extends Component<Props, State> {
       productContent = this.displayProducts(productItems);
     }
 
-
-    let content =  <InfiniteScroll
-    dataLength={this.state.productItems.length}
-    next={this.loadTheProducts}
-    hasMore={true}
-    loader={  <IonLoading
-      cssClass="woo-loader"
-      isOpen={loading}
-      spinner={'dots'}
-      message={'Please wait...'}
-    />}
-  >
-    {this.displayProducts(productItems)}
-    
-  </InfiniteScroll>
+    let content = (
+      <div
+        id="scrollableDiv"
+        style={{
+          height: scrollHeight,
+          overflow: 'auto'
+        }}
+      >
+        <InfiniteScroll
+          dataLength={this.state.productItems.length}
+          next={this.loadTheProducts}
+          hasMore={true}
+          scrollableTarget="scrollableDiv"
+          loader={
+            <IonLoading
+              cssClass="woo-loader"
+              isOpen={loading}
+              spinner={'dots'}
+              message={'Please wait...'}
+            />
+          }
+        >
+          {this.displayProducts(productItems)}
+        </InfiniteScroll>
+      </div>
+    );
 
     return (
       <IonPage>
@@ -345,7 +368,7 @@ class Products extends Component<Props, State> {
             <IonTitle> Products </IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
+        <IonContent ref={this.scrollableContent}>
           {this.showToast('Added to Cart')}
           <Modal show={isDetailView} modalClosed={this.detailCancelHandler}>
             {productDetail}
@@ -357,4 +380,4 @@ class Products extends Component<Props, State> {
   }
 }
 
-export default Products;
+export default withIonLifeCycle(Products);
