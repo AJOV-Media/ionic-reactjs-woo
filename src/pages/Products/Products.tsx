@@ -46,6 +46,7 @@ interface State {
   currentPage: number;
   showToast: boolean;
   scrollHeight: number;
+  hasMoreProduct: boolean;
 }
 
 class Products extends Component<Props, State> {
@@ -64,7 +65,8 @@ class Products extends Component<Props, State> {
       currentCartQty: 1,
       currentPage: 1,
       showToast: false,
-      scrollHeight: 0
+      scrollHeight: 0,
+      hasMoreProduct: true
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -105,7 +107,7 @@ class Products extends Component<Props, State> {
 
   loadTheProducts = () => {
     const { searchKey, searchValue } = this.props;
-    const { currentPage } = this.state;
+    const { currentPage, hasMoreProduct } = this.state;
 
     let params = { page: currentPage };
 
@@ -115,11 +117,17 @@ class Products extends Component<Props, State> {
 
     this.WooCommerce.get('products', params)
       .then((response) => {
-        Object.keys(response.data).forEach((key) => {
-          this.setState({
-            productItems: [...this.state.productItems, response.data[key]]
+        if (response.data.length) {
+          Object.keys(response.data).forEach((key) => {
+            this.setState({
+              productItems: [...this.state.productItems, response.data[key]],
+              currentPage: currentPage + 1,
+              hasMoreProduct: true
+            });
           });
-        });
+        } else {
+          this.setState({ hasMoreProduct: false, loading: false });
+        }
       })
       .catch((error) => {
         console.log('Error Data:', error);
