@@ -18,7 +18,9 @@ import {
   IonInput,
   IonToast,
   IonGrid,
-  withIonLifeCycle
+  withIonLifeCycle,
+  IonItem,
+  IonLabel
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
@@ -107,7 +109,7 @@ class Products extends Component<Props, State> {
 
   loadTheProducts = () => {
     const { searchKey, searchValue } = this.props;
-    const { currentPage, hasMoreProduct } = this.state;
+    const { currentPage } = this.state;
 
     let params = { page: currentPage };
 
@@ -324,20 +326,9 @@ class Products extends Component<Props, State> {
       productItems,
       isDetailView,
       productDetail,
-      scrollHeight
+      scrollHeight,
+      hasMoreProduct
     } = this.state; //Deconstruct
-
-    let productContent;
-
-    if (error) {
-      productContent = (
-        <div className="container">
-          <p> No product</p>
-        </div>
-      );
-    } else if (productItems) {
-      productContent = this.displayProducts(productItems);
-    }
 
     let content = (
       <div
@@ -350,7 +341,7 @@ class Products extends Component<Props, State> {
         <InfiniteScroll
           dataLength={this.state.productItems.length}
           next={this.loadTheProducts}
-          hasMore={true}
+          hasMore={hasMoreProduct}
           scrollableTarget="scrollableDiv"
           loader={
             <IonLoading
@@ -359,6 +350,11 @@ class Products extends Component<Props, State> {
               spinner={'dots'}
               message={'Please wait...'}
             />
+          }
+          endMessage={
+            <IonItem>
+              <IonLabel>No More Products.</IonLabel>
+            </IonItem>
           }
         >
           {this.displayProducts(productItems)}
