@@ -300,7 +300,12 @@ class Products extends Component<Props, State> {
   };
 
   searchTheString = (value) => {
-    this.setState({ searchString: value });
+    this.setState({
+      searchString: value,
+      currentPage: 1,
+      productItems: [],
+      loading: true
+    });
     this.loadTheProducts();
   };
 
