@@ -20,7 +20,8 @@ import {
   IonGrid,
   withIonLifeCycle,
   IonItem,
-  IonLabel
+  IonLabel,
+  IonSearchbar
 } from '@ionic/react';
 
 import WooCommerceRestApi from '@woocommerce/woocommerce-rest-api';
@@ -49,6 +50,7 @@ interface State {
   showToast: boolean;
   scrollHeight: number;
   hasMoreProduct: boolean;
+  searchString: string;
 }
 
 class Products extends Component<Props, State> {
@@ -68,7 +70,8 @@ class Products extends Component<Props, State> {
       currentPage: 1,
       showToast: false,
       scrollHeight: 0,
-      hasMoreProduct: true
+      hasMoreProduct: true,
+      searchString: ''
     };
 
     this.WooCommerce = new WooCommerceRestApi({
@@ -109,12 +112,16 @@ class Products extends Component<Props, State> {
 
   loadTheProducts = () => {
     const { searchKey, searchValue } = this.props;
-    const { currentPage } = this.state;
+    const { currentPage, searchString } = this.state;
 
     let params = { page: currentPage };
 
     if (searchKey) {
       Object.assign(params, { [searchKey]: searchValue });
+    }
+
+    if (searchString) {
+      Object.assign(params, { search: searchString });
     }
 
     this.WooCommerce.get('products', params)
@@ -292,6 +299,11 @@ class Products extends Component<Props, State> {
       });
   };
 
+  searchTheString = (value) => {
+    this.setState({ searchString: value });
+    this.loadTheProducts();
+  };
+
   displayProductReview = (reviews) =>
     reviews.length > 0 &&
     reviews.map((review) => (
@@ -370,6 +382,12 @@ class Products extends Component<Props, State> {
               <IonMenuButton />
             </IonButtons>
             <IonTitle> Products </IonTitle>
+          </IonToolbar>
+          <IonToolbar>
+            <IonSearchbar
+              onIonChange={(e) => this.searchTheString(e.detail.value)}
+              debounce={2000}
+            ></IonSearchbar>
           </IonToolbar>
         </IonHeader>
         <IonContent ref={this.scrollableContent}>
